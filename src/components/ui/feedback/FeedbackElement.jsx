@@ -3,7 +3,9 @@ import Badge from '../feedback/Badge'
 import Loader from './Loader'
 import Spinner from './Spinner'
 import EmptyState from './EmptyState'
-import  Button  from "../buttons/Button";
+import Button from "../buttons/Button";
+import Tooltip from './Tooltip'
+import Alert from './Alert'
 
 
 const FeedbackElement = () => {
@@ -91,16 +93,37 @@ const FeedbackElement = () => {
                 />
 
 
-<EmptyState
-  title="No Bookings Yet"
-  description="Bookings will appear here once users make a reservation."
-  action={
-    <Button variant="primary">
-      Add Booking
-    </Button>
-  }
-/>
+                <EmptyState
+                    title="No Bookings Yet"
+                    description="Bookings will appear here once users make a reservation."
+                    action={
+                        <Button variant="primary">
+                            Add Booking
+                        </Button>
+                    }
+                />
             </div>
+
+            <Tooltip content={'CK'} bgColor='primary'>
+                chandrukumar
+            </Tooltip>
+
+            <Alert
+                type="success"
+                title="Success"
+                message="User has been updated successfully."
+            />
+
+            <Alert
+                type="danger"
+                title="Error"
+                message="Something went wrong. Please try again."
+            // position='top-right'
+            />
+
+
+
+
 
         </div>
 
