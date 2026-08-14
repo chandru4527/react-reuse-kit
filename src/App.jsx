@@ -5,6 +5,7 @@ import FeedbackElement from './components/ui/feedback/FeedbackElement'
 import TableElement from './components/ui/table/TableElement'
 import CardElement from './Pages/CardElement'
 import AvatarElements from './Pages/AvatarElements'
+import Modal from './components/ui/overlay/Modal'
 
 const App = () => {
 
@@ -24,13 +25,17 @@ const App = () => {
       {/* <FeedbackElement/> */}
 
       {/* 4 tables */}
-      <TableElement/>
+      <TableElement />
 
       {/* 5 card */}
       {/* <CardElement/> */}
 
       {/* 6 avatar */}
       {/* <AvatarElements/> */}
+
+
+      {/* model container */}
+      <Modal />
     </div>
   )
 }
