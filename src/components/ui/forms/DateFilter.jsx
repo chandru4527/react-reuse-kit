@@ -1,30 +1,51 @@
 import { useForm } from "react-hook-form";
+import dayjs from "dayjs";
 import Input from "../forms/Input";
-import {formatDate} from '../../../utils/date'
+import Button from "../buttons/Button";
 
 const DateFilter = () => {
     const {
         register,
         handleSubmit,
+        formState: { errors },
     } = useForm({
+        mode: "onChange",
         defaultValues: {
             startDate: "",
             endDate: "",
         },
     });
 
+    const validateDate = (value) => {
+        if (!value) {
+            return "Date is required";
+        }
+
+        if (dayjs(value).isAfter(dayjs(), "day")) {
+            return "Future dates are not allowed";
+        }
+
+        return true;
+    };
+
     const onSubmit = (data) => {
-        console.log("Date Filter:", formatDate(data));
+        console.log(data);
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
+
+            <h1 className="mt-5">date filter</h1>
 
             <Input
                 label="From Date"
                 name="startDate"
                 type="date"
                 register={register}
+                validation={{
+                    validate: validateDate,
+                }}
+                error={errors.startDate}
             />
 
             <Input
@@ -32,14 +53,19 @@ const DateFilter = () => {
                 name="endDate"
                 type="date"
                 register={register}
+                validation={{
+                    validate: validateDate,
+                }}
+                error={errors.endDate}
             />
 
-            <button
+            <Button
                 type="submit"
-                className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white"
+                variant="primary"
+                className="mt-10"
             >
                 Apply
-            </button>
+            </Button>
 
         </form>
     );
