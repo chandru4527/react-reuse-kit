@@ -16,7 +16,7 @@ const App = () => {
 
       <h1 className='text-center font-bold mt-10 text-2xl'>Reusable Components</h1>
       {/* 1 form reusable inputs */}
-      {/* <FormElements/> */}
+      <FormElements/>
 
       {/* 2 buttons  */}
       {/* <ButtonElement/> */}
@@ -25,7 +25,7 @@ const App = () => {
       {/* <FeedbackElement/> */}
 
       {/* 4 tables */}
-      <TableElement />
+      {/* <TableElement /> */}
 
       {/* 5 card */}
       {/* <CardElement/> */}
