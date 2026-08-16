@@ -7,6 +7,8 @@ import CardElement from './Pages/CardElement'
 import AvatarElements from './Pages/AvatarElements'
 import Modal from './components/ui/overlay/Modal'
 
+import NavigationElements from './components/ui/naviagation/NavigationElements'
+
 const App = () => {
 
 
@@ -16,7 +18,7 @@ const App = () => {
 
       <h1 className='text-center font-bold mt-10 text-2xl'>Reusable Components</h1>
       {/* 1 form reusable inputs */}
-      <FormElements/>
+      {/* <FormElements /> */}
 
       {/* 2 buttons  */}
       {/* <ButtonElement/> */}
@@ -33,6 +35,8 @@ const App = () => {
       {/* 6 avatar */}
       {/* <AvatarElements/> */}
 
+      {/* 6 navigation */}
+      <NavigationElements />
 
       {/* model container */}
       <Modal />
