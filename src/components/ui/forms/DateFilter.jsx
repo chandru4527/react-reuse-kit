@@ -1,51 +1,62 @@
-import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
+import { useForm } from "react-hook-form";
+
 import Input from "../forms/Input";
 import Button from "../buttons/Button";
 
-const DateFilter = () => {
+const DateFilter = ({
+    onApply,
+    dateFormat = "YYYY-MM-DD",
+}) => {
+
     const {
         register,
         handleSubmit,
+        watch,
+        clearErrors,
         formState: { errors },
     } = useForm({
-        mode: "onChange",
         defaultValues: {
             startDate: "",
             endDate: "",
         },
     });
 
-    const validateDate = (value) => {
-        if (!value) {
-            return "Date is required";
-        }
-
-        if (dayjs(value).isAfter(dayjs(), "day")) {
-            return "Future dates are not allowed";
-        }
-
-        return true;
-    };
+    const startDate = watch("startDate");
 
     const onSubmit = (data) => {
-        console.log(data);
+
+        console.log("FORM DATA:", data);
+
+        const formattedData = {
+            startDate: data.startDate
+                ? dayjs(data.startDate).format(dateFormat)
+                : "",
+
+            endDate: data.endDate
+                ? dayjs(data.endDate).format(dateFormat)
+                : "",
+        };
+
+        console.log("FORMATTED DATE:", formattedData);
+
+        onApply?.(formattedData);
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-
-            <h1 className="mt-5">date filter</h1>
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex items-end gap-3"
+        >
 
             <Input
                 label="From Date"
                 name="startDate"
                 type="date"
                 register={register}
-                validation={{
-                    validate: validateDate,
-                }}
+                clearErrors={clearErrors}
                 error={errors.startDate}
+                max={dayjs().format("YYYY-MM-DD")}
             />
 
             <Input
@@ -53,16 +64,15 @@ const DateFilter = () => {
                 name="endDate"
                 type="date"
                 register={register}
-                validation={{
-                    validate: validateDate,
-                }}
+                clearErrors={clearErrors}
                 error={errors.endDate}
+                min={startDate || undefined}
+                max={dayjs().format("YYYY-MM-DD")}
             />
 
             <Button
                 type="submit"
                 variant="primary"
-                className="mt-10"
             >
                 Apply
             </Button>

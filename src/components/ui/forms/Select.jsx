@@ -32,7 +32,7 @@ const Select = ({
         onFocus={() => clearErrors?.(name)}
         disabled={disabled}
         className={`w-full rounded border px-3 py-2 bg-white text-gray-600 font-semibold
-          ${error ? "border-red-500" : "border-gray-500"}
+          ${error ? "border-red-500" : "border-gray-300"}
           focus:outline-none focus:border-blue-500
           ${disabled ? "opacity-60 cursor-not-allowed" : ""}
           ${className}`}
