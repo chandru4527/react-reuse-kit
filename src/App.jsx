@@ -8,6 +8,7 @@ import AvatarElements from './Pages/AvatarElements'
 import Modal from './components/ui/overlay/Modal'
 
 import NavigationElements from './components/ui/naviagation/NavigationElements'
+import Drawer from './components/ui/overlay/Drawer'
 
 const App = () => {
 
@@ -40,6 +41,9 @@ const App = () => {
 
       {/* model container */}
       <Modal />
+
+      {/* globel drawer */}
+      <Drawer/>
     </div>
   )
 }
