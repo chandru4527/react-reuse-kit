@@ -11,9 +11,6 @@ import NavigationElements from './components/ui/naviagation/NavigationElements'
 import Drawer from './components/ui/overlay/Drawer'
 
 const App = () => {
-
-
-
   return (
     <div className='flex flex-col p-10 gap-10'>
 
@@ -37,13 +34,14 @@ const App = () => {
       {/* <AvatarElements/> */}
 
       {/* 6 navigation */}
-      <NavigationElements />
+      {/* <NavigationElements /> */}
 
       {/* model container */}
       <Modal />
 
       {/* globel drawer */}
       <Drawer/>
+
     </div>
   )
 }
