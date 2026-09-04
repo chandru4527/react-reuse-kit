@@ -3,6 +3,8 @@ import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../Pages/Dashboard";
 import ButtonElement from '../Pages/ButtonElement'
 import CardElement from '../Pages/CardElement'
+import InputElement from '../Pages/inputElement'
+import TableElements from "../Pages/TableElements";
 
 const routers = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ const routers = createBrowserRouter([
       {
         path:'cards',
         element:<CardElement/>
+      },
+      {
+        path: "inputs",
+        element: <InputElement />,
+      },
+      {
+        path:'tables',
+        element : <TableElements/>
       }
     ],
   },

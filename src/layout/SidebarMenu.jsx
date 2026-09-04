@@ -1,117 +1,142 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp, } from "react-icons/md";
+import { MdExpandMore } from "react-icons/md";
 
-import useSidebarStore from "../store/useSidebarStore";
+const SidebarMenu = ({
+    item,
+    collapsed,
+    mobileOpen,
+    showText,
+    setCollapsed,
+    closeMobileSidebar,
+}) => {
+    const location = useLocation();
+    const [open, setOpen] = useState(false);
 
-const SidebarMenu = ({ item }) => {
-  const location = useLocation();
+    const hasChildren = item.children?.length > 0;
 
-  const { isCollapsed, closeMobileSidebar, } = useSidebarStore();
+    const isChildActive = hasChildren
+        ? item.children.some((child) => location.pathname === child.path)
+        : false;
 
-  const hasChildren = item.children?.length > 0;
-
-  // Check if any child route is active
-  const isChildActive = item.children?.some(
-    (child) => location.pathname === child.path
-  );
-
-  const [isOpen, setIsOpen] = useState(isChildActive);
-
-  // Automatically open parent when child is active
-  useEffect(() => {
-    if (isChildActive) {
-      setIsOpen(true);
-    }
-  }, [isChildActive]);
-
-  const Icon = item.icon;
-
-  // Normal menu item
-  if (!hasChildren) {
-    return (
-      <NavLink
-        to={item.path}
-        end={item.path === "/admin"}
-        onClick={closeMobileSidebar}
-        className={({ isActive }) =>
-          `flex items-center gap-3 rounded px-3 py-3 transition-all hover:text-blue-600 ${isActive
-            ? "bg-white text-blue-600"
-            : "text-white hover:bg-white"
-          } ${isCollapsed ? "lg:justify-center" : ""}`
+    useEffect(() => {
+        if (collapsed && !mobileOpen) {
+            setOpen(false);
+            return;
         }
-      >
-        <Icon size={22} />
 
-        <span
-          className={`whitespace-nowrap ${isCollapsed ? "lg:hidden" : ""
-            }`}
+        if (isChildActive) {
+            setOpen(true);
+        }
+    }, [location.pathname, collapsed, mobileOpen, isChildActive]);
+
+    const handleAccordion = () => {
+        if (collapsed && !mobileOpen) {
+            setCollapsed(false);
+            setOpen(true);
+            return;
+        }
+
+        setOpen((prev) => !prev);
+    };
+
+    const handleChildClick = () => {
+        setOpen(true);
+        closeMobileSidebar();
+    };
+
+    const activeClass = "bg-white text-blue-700 font-semibold";
+
+    const normalClass =
+        "text-white hover:bg-white hover:text-blue-700";
+
+    if (hasChildren) {
+        return (
+            <div>
+                <button
+                    type="button"
+                    onClick={handleAccordion}
+                    className={`flex items-center text-sm transition-all duration-300 
+                        ${showText
+                            ? "w-full justify-between rounded px-2"
+                            : "mx-auto h-12 w-12 justify-center rounded"
+                        } ${isChildActive ? activeClass : normalClass}`}
+                >
+                    <div
+                        className={`flex min-w-0 items-center ${showText ? "gap-3" : "justify-center"
+                            }`}
+                    >
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center text-2xl">
+                            {item.icon && <item.icon />}
+                        </span>
+
+                        {showText && (
+                            <span className="truncate">
+                                {item.label}
+                            </span>
+                        )}
+                    </div>
+
+                    {showText && (
+                        <MdExpandMore
+                            className={`shrink-0 text-xl transition-transform duration-300 ${open ? "rotate-180" : ""
+                                }`}
+                        />
+                    )}
+                </button>
+
+                <div
+                    className={`overflow-hidden transition-all duration-300 ${!collapsed && open
+                        ? "mt-1 max-h-60"
+                        : "max-h-0"
+                        }`}
+                >
+                    <div className="ml-8 space-y-1">
+                        {item.children.map((child) => (
+                            <NavLink
+                                key={child.path}
+                                to={child.path}
+                                end
+                                onClick={handleChildClick}
+                                className={({ isActive }) =>
+                                    `flex items-center rounded px-3 py-2 text-md transition-all duration-300 ${isActive
+                                        ? activeClass
+                                        : normalClass
+                                    }`
+                                }
+                            >
+                                {child.label}
+                            </NavLink>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <NavLink
+            to={item.path}
+            end
+            onClick={closeMobileSidebar}
+            className={({ isActive }) => `flex items-center text-sm transition-all duration-300   mt-2
+            ${showText
+                    ? "w-full gap-3 rounded "
+                    : "mx-auto h-12 w-12 justify-center rounded"
+                } ${isActive ? activeClass : normalClass}`
+            }
         >
-          {item.label}
-        </span>
-      </NavLink>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center text-2xl">
+                {item.icon && <item.icon />}
+            </span>
+
+            {showText && (
+                <span className="truncate">
+                    {item.label}
+                </span>
+            )}
+        </NavLink>
     );
-  }
-
-  // Accordion menu
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-all ${isChildActive
-          ? "bg-blue-50 text-blue-600"
-          : "text-gray-600 hover:bg-gray-100"
-          } ${isCollapsed ? "lg:justify-center" : ""}`}
-      >
-        <Icon size={22} />
-
-        <span
-          className={`flex-1 whitespace-nowrap ${isCollapsed ? "lg:hidden" : ""
-            }`}
-        >
-          {item.label}
-        </span>
-
-        {!isCollapsed && (
-          isOpen ? (
-            <MdKeyboardArrowDown size={22} />
-          ) : (
-            <MdKeyboardArrowUp size={22} />
-          )
-        )}
-      </button>
-
-      {/* Submenu */}
-      {!isCollapsed && isOpen && (
-        <div className="ml-6 mt-1 space-y-1 border-l border-gray-200 pl-3">
-          {item.children.map((child) => {
-            const ChildIcon = child.icon;
-
-            return (
-              <NavLink
-                key={child.path}
-                to={child.path}
-                onClick={closeMobileSidebar}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${isActive
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                  }`
-                }
-              >
-                {ChildIcon && (
-                  <ChildIcon size={18} />
-                )}
-
-                <span>{child.label}</span>
-              </NavLink>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
 };
 
 export default SidebarMenu;
