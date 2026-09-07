@@ -49,11 +49,11 @@ const Button = forwardRef(
       square: "rounded-none",
     };
 
-    const handleClick = (event) => {
-      if (loading || disabled) return;
+    // const handleClick = () => {
+    //   if (loading || disabled) return;
 
-      onClick?.(event);
-    };
+    //   onClick?.();
+    // };
 
     return (
       <button
@@ -62,7 +62,8 @@ const Button = forwardRef(
         disabled={disabled || loading}
         aria-disabled={disabled || loading}
         aria-busy={loading}
-        onClick={handleClick}
+        // onClick={handleClick}
+        onClick={onClick}
         className={twMerge(
           baseStyles,
           variants[variant],
