@@ -1,43 +1,38 @@
 import { create } from "zustand";
 
-const useModalStore = create((set) => ({
+const defaultAction = {
+    label: "Close",
+    variant: "primary",
+    onClick: null,
+    loading: false,
+    disabled: false,
+    className: "",
+};
 
+const useModalStore = create((set) => ({
     isOpen: false,
     title: "",
     content: null,
     size: "md",
+    rounded: "lg",
+    action: defaultAction,
 
-    // Dynamic action button
-    action: {
-        label: "Save",
-        variant: "primary",
-        onClick: null,
-        loading: false,
-        disabled: false,
-    },
-
-    // Open Modal
-    openModal: ({
-        title = "",
-        content = null,
-        size = "md",
-        action = {},
-    }) =>
+    openModal: ({ title = "", content = null, size = "md", rounded = "lg", action = {}, }) =>
         set({
             isOpen: true,
             title,
             content,
             size,
+            rounded,
             action: {
-                label: action.label || "Save",
+                label: action.label || "Close",
                 variant: action.variant || "primary",
                 onClick: action.onClick || null,
                 loading: action.loading || false,
                 disabled: action.disabled || false,
+                className: action.className || "",
             },
         }),
-
-    // Close Modal
 
     closeModal: () =>
         set({
@@ -45,13 +40,8 @@ const useModalStore = create((set) => ({
             title: "",
             content: null,
             size: "md",
-            action: {
-                label: "Save",
-                variant: "primary",
-                onClick: null,
-                loading: false,
-                disabled: false,
-            },
+            rounded: "lg",
+            action: defaultAction,
         }),
 }));
 
