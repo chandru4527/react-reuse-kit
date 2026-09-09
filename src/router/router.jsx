@@ -9,6 +9,9 @@ import SelectElement from "../Pages/SelectElement";
 import TextareaElement from "../Pages/TextareaElement";
 import FileInputElement from "../Pages/FileInputElement";
 import ModalElement from '../Pages/ModalElement'
+import CheckboxElement from '../Pages/CheckboxElement'
+import SwitchElement from "../Pages/SwitchElement";
+import RadioElement from "../Pages/RadioElement";
 
 const routers = createBrowserRouter([
   {
@@ -42,7 +45,7 @@ const routers = createBrowserRouter([
       },
       {
         path: "modals",
-        element: <ModalElement/>,
+        element: <ModalElement />,
         handle: {
           title: "Modals",
         },
@@ -80,6 +83,27 @@ const routers = createBrowserRouter([
         element: <FileInputElement />,
         handle: {
           title: "File Input",
+        },
+      },
+      {
+        path: "form/checkbox",
+        element: <CheckboxElement />,
+        handle: {
+          title: "Checkbox",
+        },
+      },
+      {
+        path: "form/switch",
+        element: <SwitchElement />,
+        handle: {
+          title: "Checkbox",
+        },
+      },
+      {
+        path: "form/radio",
+        element: <RadioElement />,
+        handle: {
+          title: "Radio",
         },
       },
     ],
