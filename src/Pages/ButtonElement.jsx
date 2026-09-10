@@ -1,18 +1,24 @@
-import React from "react";
-import { MdAdd, MdCheck, MdDelete, MdDownload, MdArrowForward, MdSend, MdShare, } from "react-icons/md";
+import {
+    MdAdd,
+    MdCheck,
+    MdDelete,
+    MdDownload,
+    MdArrowForward,
+    MdSend,
+    MdShare,
+} from "react-icons/md";
 
 import Button from "../components/ui/buttons/Button";
 
 const ButtonElement = () => {
-
     const handleClick = (message) => {
         alert(`${message} button clicked!`);
     };
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-
             <div className="mx-auto max-w-7xl rounded border border-gray-200 bg-white p-5 shadow-sm sm:p-8">
+
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-lg font-bold text-gray-900 sm:text-2xl">
@@ -58,6 +64,10 @@ const ButtonElement = () => {
                         <Button variant="ghost" shape="rounded">
                             Ghost
                         </Button>
+
+                        {/* <Button onMouseEnter={() => console.log("Mouse entered")}>
+                            Like
+                        </Button> */}
                     </div>
                 </section>
 
@@ -87,33 +97,33 @@ const ButtonElement = () => {
                     </h2>
 
                     <div className="flex flex-wrap gap-5">
-                        <Button leftIcon={<MdAdd size={20} />}>
+                        <Button leftIcon={MdAdd}>
                             Add User
                         </Button>
 
-                        <Button variant="success" leftIcon={<MdCheck size={20} />}>
+                        <Button variant="success" leftIcon={MdCheck}>
                             Success
                         </Button>
 
-                        <Button variant="danger" leftIcon={<MdDelete size={20} />}>
+                        <Button variant="danger" leftIcon={MdDelete}>
                             Delete
                         </Button>
 
-                        <Button variant="outline" leftIcon={<MdDownload size={20} />}>
+                        <Button variant="outline" leftIcon={MdDownload}>
                             Download
                         </Button>
 
-                        <Button rightIcon={<MdArrowForward size={20} />}>
+                        <Button rightIcon={MdArrowForward}>
                             Next
                         </Button>
 
-                        <Button rightIcon={<MdSend size={20} />}>
+                        <Button rightIcon={MdSend}>
                             Send
                         </Button>
 
                         <Button
-                            leftIcon={<MdShare size={20} />}
-                            rightIcon={<MdShare size={20} />}
+                            leftIcon={MdShare}
+                            rightIcon={MdShare}
                         >
                             Share
                         </Button>
@@ -127,7 +137,9 @@ const ButtonElement = () => {
                     </h2>
 
                     <div className="flex flex-wrap gap-5">
-                        <Button>Default</Button>
+                        <Button>
+                            Default
+                        </Button>
 
                         <Button loading>
                             Loading
@@ -143,7 +155,7 @@ const ButtonElement = () => {
                     </div>
                 </section>
 
-                {/* OnClick */}
+                {/* On Click */}
                 <section className="border-t border-gray-100 py-5">
                     <h2 className="mb-6 font-bold text-gray-800">
                         5. ON CLICK
@@ -192,9 +204,9 @@ const ButtonElement = () => {
                         </Button>
                     </div>
                 </section>
+
             </div>
         </div>
-
     );
 };
 
