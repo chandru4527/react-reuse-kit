@@ -7,6 +7,7 @@ import ScrollToTop from "../components/ScrollToTop";
 const AdminLayout = () => {
   return (
     <div className="h-screen flex bg-gray-100 overflow-hidden">
+
       <AdminSidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
