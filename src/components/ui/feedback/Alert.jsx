@@ -5,6 +5,8 @@ import {
     MdInfoOutline,
     MdClose,
 } from "react-icons/md";
+import Button from "../buttons/Button";
+import { twMerge } from "tailwind-merge";
 
 const Alert = ({
     type = "info",
@@ -18,17 +20,26 @@ const Alert = ({
     size = "md",
     rounded = "md",
     bgColor,
+    className = "",
 
     // Icon
     icon = true,
     customIcon,
+    iconSize,
+    iconClassName = "",
+
+    // Content
+    titleClassName = "",
+    messageClassName = "",
 
     // Close
     closable = false,
     onClose,
-}) => {
+    closeClassName = "",
+    closeIconSize = 20,
 
-    // Alert Types
+    ...props
+}) => {
     const types = {
         success: {
             icon: MdCheckCircleOutline,
@@ -37,7 +48,6 @@ const Alert = ({
             iconColor: "text-green-600",
             border: "border-green-200",
         },
-
         danger: {
             icon: MdErrorOutline,
             bg: "bg-red-50",
@@ -45,7 +55,6 @@ const Alert = ({
             iconColor: "text-red-600",
             border: "border-red-200",
         },
-
         warning: {
             icon: MdWarningAmber,
             bg: "bg-yellow-50",
@@ -53,7 +62,6 @@ const Alert = ({
             iconColor: "text-yellow-600",
             border: "border-yellow-200",
         },
-
         info: {
             icon: MdInfoOutline,
             bg: "bg-blue-50",
@@ -66,14 +74,12 @@ const Alert = ({
     const currentType = types[type] || types.info;
     const Icon = customIcon || currentType.icon;
 
-    // Sizes
     const sizes = {
         sm: "p-3 text-xs",
         md: "p-4 text-sm",
         lg: "p-5 text-base",
     };
 
-    // Rounded
     const roundedStyles = {
         none: "rounded-none",
         sm: "rounded-sm",
@@ -84,54 +90,51 @@ const Alert = ({
         full: "rounded-full",
     };
 
-    // -------------------------
-    // Position
-    // -------------------------
-
     const positions = {
         static: "relative",
-
         top: "fixed top-5 left-1/2 -translate-x-1/2",
         "top-left": "fixed top-5 left-5",
         "top-right": "fixed top-5 right-5",
-
         bottom: "fixed bottom-5 left-1/2 -translate-x-1/2",
         "bottom-left": "fixed bottom-5 left-5",
         "bottom-right": "fixed bottom-5 right-5",
     };
 
+    const defaultIconSize = size === "sm" ? 18 : size === "lg" ? 24 : 20;
+
     return (
         <div
             role="alert"
-            className={` z-50 flex w-full max-w-lg items-start gap-3 border shadow-sm
-        ${positions[position]}
-        ${sizes[size]}
-        ${roundedStyles[rounded]}
-        ${bgColor || currentType.bg}
-        ${currentType.border}
-      `}
+            className={twMerge(
+                "z-50 flex w-full max-w-lg items-start gap-3 border shadow-sm",
+                positions[position],
+                sizes[size],
+                roundedStyles[rounded],
+                bgColor || currentType.bg,
+                currentType.border,
+                className
+            )}
+            {...props}
         >
-            {/* Icon */}
-
             {icon && (
                 <Icon
-                    size={size === "sm" ? 18 : size === "lg" ? 24 : 20}
-                    className={`
-            mt-0.5 shrink-0
-            ${currentType.iconColor}
-          `}
+                    size={iconSize || defaultIconSize}
+                    className={twMerge(
+                        "mt-0.5 shrink-0",
+                        currentType.iconColor,
+                        iconClassName
+                    )}
                 />
             )}
-
-            {/* Content */}
 
             <div className="min-w-0 flex-1">
                 {title && (
                     <h4
-                        className={`
-              font-semibold
-              ${currentType.text}
-            `}
+                        className={twMerge(
+                            "font-semibold",
+                            currentType.text,
+                            titleClassName
+                        )}
                     >
                         {title}
                     </h4>
@@ -139,27 +142,33 @@ const Alert = ({
 
                 {message && (
                     <p
-                        className={`
-              ${title ? "mt-1" : ""}
-              ${currentType.text}
-            `}
+                        className={twMerge(
+                            title ? "mt-1" : "",
+                            currentType.text,
+                            messageClassName
+                        )}
                     >
                         {message}
                     </p>
                 )}
             </div>
 
-            {/* Close */}
-
             {closable && (
-                <button
+                <Button
                     type="button"
-                    onClick={onClose}
-                    className={` shrink-0 rounded-md p-1 transition hover:bg-black/5 ${currentType.text}`}
+                    variant="ghost"
+                    size="sm"
+                    rounded="md"
+                    leftIcon={MdClose}
+                    iconSize={closeIconSize}
                     aria-label="Close alert"
-                >
-                    <MdClose size={20} />
-                </button>
+                    onClick={onClose}
+                    className={twMerge(
+                        "shrink-0 p-1!",
+                        currentType.text,
+                        closeClassName
+                    )}
+                />
             )}
         </div>
     );
