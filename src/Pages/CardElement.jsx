@@ -1,4 +1,3 @@
-import React from "react";
 import {
   MdShoppingCart,
   MdFavorite,
@@ -9,6 +8,10 @@ import {
   MdDelete,
   MdEdit,
   MdArrowForward,
+  MdGroup,
+  MdRestaurant,
+  MdVolunteerActivism,
+  MdHistory,
 } from "react-icons/md";
 
 import Card from "../components/ui/display/Card";
@@ -17,23 +20,26 @@ const CardElements = () => {
   return (
     <div className="grid grid-cols-1 items-start gap-6 p-6 md:grid-cols-2 xl:grid-cols-3">
 
+      {/* 1. Profile / Image Card */}
       <Card
         image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPPlO36q9_kyBPRD2G08hbwojbQCN7ZRrNcVtWLyU1X55yY1OAZj6B0G3G&s=10"
         imageAlt="Yor Forger Anime Girl"
         imageClassName="h-70 object-cover object-center"
         width="md"
         title="Yor Forger"
-        description="A kind and elegant woman who secretly lives a dangerous double life as a highly skilled assassin,."
+        description="A kind and elegant woman who secretly lives a dangerous double life as a highly skilled assassin."
+        descriptionClassName="w-48 truncate"
         actions={[
           {
-            label: 'like',
-            icon: <MdFavorite />
-          }
+            label: "Like",
+            icon: MdFavorite,
+            variant: "outline",
+            onClick: () => console.log("Liked"),
+          },
         ]}
       />
 
-
-      {/* 1. Product Card */}
+      {/* 2. Product Card */}
       <Card
         image="https://images.unsplash.com/photo-1542291026-7eec264c27ff"
         imageAlt="Red Shoes"
@@ -45,14 +51,13 @@ const CardElements = () => {
         actions={[
           {
             label: "Add to Cart",
-            icon: <MdShoppingCart />,
+            icon: MdShoppingCart,
             variant: "primary",
-            className: 'flex justify-center items-center',
             onClick: () => console.log("Added"),
           },
           {
             label: "Favorite",
-            icon: <MdFavorite />,
+            icon: MdFavorite,
             variant: "outline",
             onClick: () => console.log("Favorite"),
           },
@@ -61,24 +66,42 @@ const CardElements = () => {
         <p className="text-2xl font-bold text-blue-600">$99.00</p>
       </Card>
 
-      {/* 2. Statistics Card */}
+      {/* 3. Statistics Card */}
       <Card
-        icon={<MdPeople size={26} />}
-        iconClassName="bg-blue-100 text-blue-600"
+        className="rounded-md"
+        variant="stat"
         title="Total Users"
-        description="Registered users in your application"
-        className='flex'
-      >
-        <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold">12,540</h2>
+        value="53"
+        icon={<MdGroup />}
+        iconClassName="bg-blue-100 text-blue-600"
+        bodyClassName="p-5 rounded"
+      />
 
-          <span className="text-sm font-medium text-green-600">
-            ↑ 12.5%
-          </span>
-        </div>
-      </Card>
+      {/* <Card
+        variant="stat"
+        title="Total Chefs"
+        value="36"
+        icon={<MdRestaurant />}
+        iconClassName="bg-green-100 text-green-600"
+      />
 
-      {/* 3. Orders Card */}
+      <Card
+        variant="stat"
+        title="Total Donations"
+        value="52"
+        icon={<MdVolunteerActivism />}
+        iconClassName="bg-pink-100 text-pink-600"
+      />
+
+      <Card
+        variant="stat"
+        title="Yesterday Bookings"
+        value="0"
+        icon={<MdHistory />}
+        iconClassName="bg-orange-100 text-orange-600"
+      /> */}
+
+      {/* 4. Orders Card */}
       <Card
         icon={<MdShoppingBag size={26} />}
         iconClassName="bg-green-100 text-green-600"
@@ -94,7 +117,7 @@ const CardElements = () => {
         </div>
       </Card>
 
-      {/* 4. Image Card */}
+      {/* 5. Image Card */}
       <Card
         image="https://images.unsplash.com/photo-1500534623283-312aade485b7"
         imageAlt="Nature"
@@ -104,13 +127,13 @@ const CardElements = () => {
         actions={[
           {
             label: "Read More",
-            icon: <MdArrowForward />,
-            // className: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+            icon: MdArrowForward,
+            variant: "outline",
           },
         ]}
       />
 
-      {/* 5. Header Footer Card */}
+      {/* 6. Header Footer Card */}
       <Card
         header={
           <div className="flex items-center justify-between">
@@ -145,7 +168,7 @@ const CardElements = () => {
         </div>
       </Card>
 
-      {/* 6. Profile Card */}
+      {/* 7. Profile Card */}
       <Card
         image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
         imageAlt="Profile"
@@ -156,7 +179,8 @@ const CardElements = () => {
         actions={[
           {
             label: "View Profile",
-            className: "w-full bg-blue-600 text-white hover:bg-blue-700",
+            variant: "primary",
+            className: "w-full",
           },
         ]}
       >
@@ -165,7 +189,7 @@ const CardElements = () => {
         </p>
       </Card>
 
-      {/* 7. Blog Card */}
+      {/* 8. Blog Card */}
       <Card
         badge="Technology"
         badgeClassName="bg-purple-100 text-purple-600"
@@ -173,16 +197,19 @@ const CardElements = () => {
         description="Explore the latest technologies shaping the future of web development."
         footer={
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Aug 30, 2026</span>
+            <span className="text-sm text-gray-500">
+              Aug 30, 2026
+            </span>
 
             <button className="flex items-center gap-1 text-sm font-medium text-blue-600">
-              Read More <MdArrowForward />
+              Read More
+              <MdArrowForward />
             </button>
           </div>
         }
       />
 
-      {/* 8. Clickable Card */}
+      {/* 9. Clickable Card */}
       <Card
         icon={<MdLightbulb size={28} />}
         iconClassName="bg-yellow-100 text-yellow-600"
@@ -193,11 +220,12 @@ const CardElements = () => {
         className="hover:border-yellow-400"
       >
         <span className="flex items-center gap-1 font-medium text-yellow-600">
-          Learn More <MdArrowForward />
+          Learn More
+          <MdArrowForward />
         </span>
       </Card>
 
-      {/* 9. Multiple Actions Card */}
+      {/* 10. Multiple Actions Card */}
       <Card
         icon={<MdFolder size={26} />}
         iconClassName="bg-green-100 text-green-600"
@@ -206,25 +234,25 @@ const CardElements = () => {
         actions={[
           {
             label: "View Details",
-            // className: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+            variant: "primary",
           },
           {
             label: "Edit",
-            icon: <MdEdit />,
-            // className: "border border-gray-300 text-gray-700 hover:bg-gray-100",
+            icon: MdEdit,
+            variant: "outline",
           },
           {
             label: "Delete",
-            icon: <MdDelete />,
-            // className: "border border-red-500 text-red-500 hover:bg-red-50",
+            icon: MdDelete,
+            variant: "danger",
           },
         ]}
       />
 
-      {/* 10. Loading Card */}
+      {/* 11. Loading Card */}
       <Card loading />
 
-      {/* 11. Image Bottom Card */}
+      {/* 12. Image Bottom Card */}
       <Card
         image="https://images.unsplash.com/photo-1444723121867-7a241cacace9"
         imageAlt="City"
@@ -235,18 +263,20 @@ const CardElements = () => {
         actions={[
           {
             label: "Explore Now",
-            className: "border border-blue-600 text-blue-600 hover:bg-blue-50",
+            icon: MdArrowForward,
+            variant: "outline",
           },
         ]}
       />
 
-      {/* 12. Minimal Card */}
+      {/* 13. Minimal Card */}
       <Card
         icon={<MdFavorite size={26} />}
         iconClassName="bg-purple-100 text-purple-600"
         title="Bookmarks"
         description="Save your important bookmarks and access them anywhere."
       />
+
     </div>
   );
 };
