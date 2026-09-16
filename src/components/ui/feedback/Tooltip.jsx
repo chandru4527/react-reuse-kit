@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 const Tooltip = ({
     children,
@@ -8,6 +9,7 @@ const Tooltip = ({
     rounded = "md",
     bgColor = "dark",
     textColor = "white",
+    className = "",
     disabled = false,
 }) => {
     const [show, setShow] = useState(false);
@@ -24,7 +26,7 @@ const Tooltip = ({
     const sizes = {
         sm: "px-2 py-1 text-xs",
         md: "px-3 py-1.5 text-sm",
-        lg: "px-4 py-2 text-base"
+        lg: "px-4 py-2 text-base",
     };
 
     // Rounded
@@ -35,7 +37,7 @@ const Tooltip = ({
         lg: "rounded-lg",
         xl: "rounded-xl",
         full: "rounded-full",
-    }
+    };
 
     // Background
     const backgrounds = {
@@ -45,7 +47,7 @@ const Tooltip = ({
         success: "bg-green-600",
         danger: "bg-red-600",
         warning: "bg-yellow-500",
-    }
+    };
 
     // Text color
     const textColors = {
@@ -63,6 +65,8 @@ const Tooltip = ({
             className="relative inline-flex"
             onMouseEnter={() => setShow(true)}
             onMouseLeave={() => setShow(false)}
+            onFocus={() => setShow(true)}
+            onBlur={() => setShow(false)}
         >
             {/* Trigger */}
             {children}
@@ -71,14 +75,15 @@ const Tooltip = ({
             {show && (
                 <div
                     role="tooltip"
-                    className={` absolute z-50  whitespace-nowrap  font-medium  shadow-md cursor-pointer
-
-            ${positions[position]}
-            ${sizes[size]}
-            ${roundedStyles[rounded]}
-            ${backgrounds[bgColor]}
-            ${textColors[textColor]}
-          `}
+                    className={twMerge(
+                        "absolute z-50 whitespace-nowrap font-medium shadow-md",
+                        positions[position],
+                        sizes[size],
+                        roundedStyles[rounded],
+                        backgrounds[bgColor],
+                        textColors[textColor],
+                        className
+                    )}
                 >
                     {content}
                 </div>
