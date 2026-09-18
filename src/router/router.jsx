@@ -22,7 +22,9 @@ import ProgressBarElements from "../Pages/ProgressBarElements";
 import BreadcrumbElements from "../Pages/BreadcrumbElements";
 import NavigationElements from "../Pages/NavigationElements";
 import SliderElements from "../Pages/SliderElements";
-
+import ImageElements from "../Pages/ImageElements";
+import VideoElements from "../Pages/VideoElements";
+import AudioElements from "../Pages/AudioElements";
 
 const routers = createBrowserRouter([
   {
@@ -185,6 +187,27 @@ const routers = createBrowserRouter([
         element: <SliderElements />,
         handle: {
           title: "Slider",
+        },
+      },
+      {
+        path: "media-elements/img",
+        element: <ImageElements />,
+        handle: {
+          title: "Image",
+        },
+      },
+      {
+        path: "media-elements/video",
+        element: <VideoElements />,
+        handle: {
+          title: "Video",
+        },
+      },
+      {
+        path: "media-elements/audio",
+        element: <AudioElements />,
+        handle: {
+          title: "Audio",
         },
       },
     ],
