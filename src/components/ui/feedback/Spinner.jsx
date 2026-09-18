@@ -1,9 +1,11 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 const Spinner = ({
   size = "md",
   color = "blue",
   className = "",
+  ...props
 }) => {
   const sizes = {
     xs: "h-3 w-3 border",
@@ -24,7 +26,10 @@ const Spinner = ({
 
   return (
     <span
-      className={`inline-block animate-spin rounded-full ${sizes[size]} ${colors[color]} ${className}`}
+      role="status"
+      aria-label="Loading"
+      className={twMerge("inline-block animate-spin rounded-full", sizes[size], colors[color], className)}
+      {...props}
     />
   );
 };
