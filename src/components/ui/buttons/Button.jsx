@@ -1,5 +1,24 @@
-import { isValidElement } from "react";
+import React from "react";
 import { twMerge } from "tailwind-merge";
+
+/**
+ * @param {Object} props
+ * @param {React.ReactNode} props.children
+ * @param {"button" | "submit" | "reset"} [props.type="button"]
+ * @param {"normal" | "primary" | "secondary" | "success" | "danger" | "warning" | "outline" | "ghost"} [props.variant="primary"]
+ * @param {"xs" | "sm" | "md" | "lg" | "xl"} [props.size="md"]
+ * @param {"default" | "rounded" | "full" | "square"} [props.shape="default"]
+ * @param {React.ElementType | React.ReactElement} [props.icon]
+ * @param {"start" | "end"} [props.iconPosition="start"]
+ * @param {number} [props.iconSize=20]
+ * @param {string} [props.iconClassName=""]
+ * @param {boolean} [props.loading=false]
+ * @param {string} [props.loadingText="Loading..."]
+ * @param {boolean} [props.disabled=false]
+ * @param {boolean} [props.fullWidth=false]
+ * @param {string} [props.className=""]
+ * @param {(event: React.MouseEvent<HTMLButtonElement>) => void} [props.onClick]
+ */
 
 const Button = ({
   children,
@@ -7,31 +26,30 @@ const Button = ({
   variant = "primary",
   size = "md",
   shape = "default",
+  icon: Icon,
+  iconPosition = "start",
+  iconSize = 20,
+  iconClassName = "",
   loading = false,
   loadingText = "Loading...",
   disabled = false,
-  leftIcon,
-  rightIcon,
-  iconSize = 20,
-  leftIconClassName = "",
-  rightIconClassName = "",
   fullWidth = false,
   className = "",
   onClick,
   ...props
 }) => {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none disabled:pointer-events-none disabled:opacity-70 cursor-pointer";
+    "inline-flex flex-row items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none disabled:pointer-events-none disabled:opacity-70 cursor-pointer";
 
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400",
-    success: "bg-green-600 text-white hover:bg-green-700 focus:ring-green-500",
-    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-    warning: "bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-400",
-    outline:
-      "border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-blue-500",
-    ghost: "text-blue-600 hover:bg-blue-50 focus:ring-blue-500",
+    normal: "",
+    primary: "bg-blue-600 text-white hover:bg-blue-700",
+    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+    success: "bg-green-600 text-white hover:bg-green-700",
+    danger: "bg-red-600 text-white hover:bg-red-700",
+    warning: "bg-yellow-500 text-white hover:bg-yellow-600",
+    outline: "border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
+    ghost: "text-blue-600 hover:bg-blue-50",
   };
 
   const sizes = {
@@ -49,19 +67,24 @@ const Button = ({
     square: "rounded-none",
   };
 
-  const renderIcon = (icon, className) => {
-    if (!icon) return null;
+  const renderIcon = () => {
+    if (!Icon) return null;
 
-    if (isValidElement(icon)) {
-      return icon;
+    if (React.isValidElement(Icon)) {
+      return React.cloneElement(Icon, {
+        size: Icon.props.size || iconSize,
+        className: twMerge(
+          "shrink-0",
+          Icon.props.className,
+          iconClassName
+        ),
+      });
     }
-
-    const Icon = icon;
 
     return (
       <Icon
         size={iconSize}
-        className={twMerge("shrink-0", className)}
+        className={twMerge("shrink-0", iconClassName)}
       />
     );
   };
@@ -90,11 +113,11 @@ const Button = ({
         </>
       ) : (
         <>
-          {renderIcon(leftIcon, leftIconClassName)}
+          {Icon && iconPosition === "start" && renderIcon()}
 
-          {children && <span>{children}</span>}
+          {children}
 
-          {renderIcon(rightIcon, rightIconClassName)}
+          {Icon && iconPosition === "end" && renderIcon()}
         </>
       )}
     </button>

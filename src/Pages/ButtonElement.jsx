@@ -1,11 +1,10 @@
 import {
     MdAdd,
-    MdCheck,
-    MdDelete,
-    MdDownload,
     MdArrowForward,
-    MdSend,
-    MdShare,
+    MdCheck,
+    MdClose,
+    MdDelete,
+    MdEdit,
 } from "react-icons/md";
 
 import Button from "../components/ui/buttons/Button";
@@ -37,37 +36,14 @@ const ButtonElement = () => {
                     </h2>
 
                     <div className="flex flex-wrap gap-5">
-                        <Button variant="primary" shape="rounded">
-                            Primary
-                        </Button>
-
-                        <Button variant="secondary" shape="rounded">
-                            Secondary
-                        </Button>
-
-                        <Button variant="success" shape="rounded">
-                            Success
-                        </Button>
-
-                        <Button variant="danger" shape="rounded">
-                            Danger
-                        </Button>
-
-                        <Button variant="warning" shape="rounded">
-                            Warning
-                        </Button>
-
-                        <Button variant="outline" shape="rounded">
-                            Outline
-                        </Button>
-
-                        <Button variant="ghost" shape="rounded">
-                            Ghost
-                        </Button>
-
-                        {/* <Button onMouseEnter={() => console.log("Mouse entered")}>
-                            Like
-                        </Button> */}
+                        <Button variant="normal">Normal</Button>
+                        <Button variant="primary">Primary</Button>
+                        <Button variant="secondary">Secondary</Button>
+                        <Button variant="success">Success</Button>
+                        <Button variant="danger">Danger</Button>
+                        <Button variant="warning">Warning</Button>
+                        <Button variant="outline">Outline</Button>
+                        <Button variant="ghost">Ghost</Button>
                     </div>
                 </section>
 
@@ -79,54 +55,24 @@ const ButtonElement = () => {
 
                     <div className="flex flex-wrap items-center gap-5">
                         <Button size="xs">Extra Small</Button>
-
                         <Button size="sm">Small</Button>
-
                         <Button size="md">Medium</Button>
-
                         <Button size="lg">Large</Button>
-
                         <Button size="xl">Extra Large</Button>
                     </div>
                 </section>
 
-                {/* Icons */}
+                {/* Shapes */}
                 <section className="border-t border-gray-100 py-5">
                     <h2 className="mb-6 font-bold text-gray-800">
-                        3. WITH ICONS
+                        3. SHAPES
                     </h2>
 
-                    <div className="flex flex-wrap gap-5">
-                        <Button leftIcon={MdAdd}>
-                            Add User
-                        </Button>
-
-                        <Button variant="success" leftIcon={MdCheck}>
-                            Success
-                        </Button>
-
-                        <Button variant="danger" leftIcon={MdDelete}>
-                            Delete
-                        </Button>
-
-                        <Button variant="outline" leftIcon={MdDownload}>
-                            Download
-                        </Button>
-
-                        <Button rightIcon={MdArrowForward}>
-                            Next
-                        </Button>
-
-                        <Button rightIcon={MdSend}>
-                            Send
-                        </Button>
-
-                        <Button
-                            leftIcon={MdShare}
-                            rightIcon={MdShare}
-                        >
-                            Share
-                        </Button>
+                    <div className="flex flex-wrap items-center gap-5">
+                        <Button shape="default">Default</Button>
+                        <Button shape="rounded">Rounded</Button>
+                        <Button shape="full">Full</Button>
+                        <Button shape="square">Square</Button>
                     </div>
                 </section>
 
@@ -137,12 +83,14 @@ const ButtonElement = () => {
                     </h2>
 
                     <div className="flex flex-wrap gap-5">
-                        <Button>
-                            Default
-                        </Button>
+                        <Button>Default</Button>
 
                         <Button loading>
                             Loading
+                        </Button>
+
+                        <Button loading loadingText="Processing...">
+                            Processing
                         </Button>
 
                         <Button disabled>
@@ -150,7 +98,7 @@ const ButtonElement = () => {
                         </Button>
 
                         <Button loading disabled>
-                            Processing
+                            Disabled Loading
                         </Button>
                     </div>
                 </section>
@@ -178,7 +126,7 @@ const ButtonElement = () => {
                 </section>
 
                 {/* Custom */}
-                <section className="border-t border-gray-100 pt-5">
+                <section className="border-t border-gray-100 py-5">
                     <h2 className="mb-6 font-bold text-gray-800">
                         7. CUSTOM STYLES
                     </h2>
@@ -186,22 +134,99 @@ const ButtonElement = () => {
                     <div className="flex flex-wrap gap-5">
                         <Button
                             shape="full"
-                            className="bg-purple-600 px-8 hover:bg-purple-700"
+                            className="bg-purple-600 px-8 text-white hover:bg-purple-700"
                         >
                             Rounded Full
                         </Button>
 
-                        <Button className="bg-gray-900 px-8 hover:bg-gray-800">
-                            Dark Mode
+                        <Button className="bg-gray-900 px-8 text-white hover:bg-gray-800">
+                            Dark Button
                         </Button>
 
                         <Button className="bg-white px-8 text-black shadow-lg hover:bg-gray-50">
                             With Shadow
                         </Button>
 
-                        <Button className="border-0 bg-linear-to-r from-orange-500 via-pink-500 to-purple-600 px-8">
+                        <Button className="border-0 bg-linear-to-r from-orange-500 via-pink-500 to-purple-600 text-white">
                             Gradient
                         </Button>
+                    </div>
+                </section>
+
+                {/* Icons */}
+                <section className="border-t border-gray-100 py-5">
+                    <h2 className="mb-6 font-bold text-gray-800">
+                        8. ICONS
+                    </h2>
+
+                    <div className="flex flex-wrap items-center gap-5">
+
+                        {/* Start Icon */}
+                        <Button
+                            variant="primary"
+                            icon={MdAdd}
+                            iconPosition="start"
+                        >
+                            Add User
+                        </Button>
+
+                        {/* End Icon */}
+                        <Button
+                            variant="outline"
+                            icon={MdEdit}
+                            iconPosition="end"
+                        >
+                            Edit
+                        </Button>
+
+                        {/* Start Icon */}
+                        <Button
+                            variant="success"
+                            icon={MdCheck}
+                            iconPosition="start"
+                        >
+                            Save
+                        </Button>
+
+                        {/* End Icon */}
+                        <Button
+                            variant="primary"
+                            icon={MdArrowForward}
+                            iconPosition="end"
+                        >
+                            Continue
+                        </Button>
+
+                        {/* Custom Icon Size */}
+                        <Button
+                            variant="warning"
+                            icon={MdAdd}
+                            iconPosition="start"
+                            iconSize={18}
+                        >
+                            Add Item
+                        </Button>
+
+                        {/* Only Icon */}
+                        <Button
+                            variant="danger"
+                            shape="rounded"
+                            className="h-10 w-10 p-0"
+                            aria-label="Delete"
+                        >
+                            <MdDelete size={20} />
+                        </Button>
+
+                        {/* Only Close Icon */}
+                        <Button
+                            variant="normal"
+                            shape="full"
+                            className="h-10 w-10 p-0"
+                            aria-label="Close"
+                        >
+                            <MdClose size={20} />
+                        </Button>
+
                     </div>
                 </section>
 
