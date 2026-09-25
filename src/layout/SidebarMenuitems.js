@@ -87,6 +87,10 @@ export const menuItems = [
                 label: "Alert",
             },
             {
+                path: "/admin/feedback/empty-state",
+                label: "Empty State",
+            },
+            {
                 path: "/admin/feedback/loader",
                 label: "Loader",
             },

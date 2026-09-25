@@ -7,7 +7,7 @@ import {
     MdEdit,
 } from "react-icons/md";
 
-import Button from "../components/ui/buttons/Button";
+import Button from "../components/buttons/Button";
 
 const ButtonElement = () => {
     const handleClick = (message) => {
@@ -226,6 +226,8 @@ const ButtonElement = () => {
                         >
                             <MdClose size={20} />
                         </Button>
+
+                        <Button className="px-2 hover:rotate-90 transition-all duration-300" icon={MdClose} shape="rounded" variant="normal" />
 
                     </div>
                 </section>

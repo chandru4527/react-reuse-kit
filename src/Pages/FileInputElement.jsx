@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FileInput from "../components/ui/forms/FileInput";
+import FileInput from "../components/forms/FileInput";
 
 const FileInputElement = () => {
     const [images, setImages] = useState([]);

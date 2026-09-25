@@ -1,20 +1,19 @@
 import {
-  MdShoppingCart,
-  MdFavorite,
-  MdPeople,
-  MdShoppingBag,
-  MdLightbulb,
-  MdFolder,
+  MdArrowForward,
   MdDelete,
   MdEdit,
-  MdArrowForward,
+  MdFavorite,
+  MdFolder,
   MdGroup,
-  MdRestaurant,
-  MdVolunteerActivism,
   MdHistory,
+  MdLightbulb,
+  MdRestaurant,
+  MdShoppingBag,
+  MdShoppingCart,
+  MdVolunteerActivism,
 } from "react-icons/md";
 
-import Card from "../components/ui/display/Card";
+import Card from "../components/display/Card";
 
 const CardElements = () => {
   return (
@@ -28,11 +27,12 @@ const CardElements = () => {
         width="md"
         title="Yor Forger"
         description="A kind and elegant woman who secretly lives a dangerous double life as a highly skilled assassin."
-        descriptionClassName="w-48 truncate"
+        descriptionClassName="line-clamp-2"
         actions={[
           {
             label: "Like",
             icon: MdFavorite,
+            iconPosition: "start",
             variant: "outline",
             onClick: () => console.log("Liked"),
           },
@@ -52,12 +52,14 @@ const CardElements = () => {
           {
             label: "Add to Cart",
             icon: MdShoppingCart,
+            iconPosition: "start",
             variant: "primary",
             onClick: () => console.log("Added"),
           },
           {
             label: "Favorite",
             icon: MdFavorite,
+            iconPosition: "start",
             variant: "outline",
             onClick: () => console.log("Favorite"),
           },
@@ -66,18 +68,16 @@ const CardElements = () => {
         <p className="text-2xl font-bold text-blue-600">$99.00</p>
       </Card>
 
-      {/* 3. Statistics Card */}
+      {/* 3. Statistics Cards */}
       <Card
-        className="rounded-md"
         variant="stat"
         title="Total Users"
         value="53"
         icon={<MdGroup />}
         iconClassName="bg-blue-100 text-blue-600"
-        bodyClassName="p-5 rounded"
       />
 
-      {/* <Card
+      <Card
         variant="stat"
         title="Total Chefs"
         value="36"
@@ -99,7 +99,7 @@ const CardElements = () => {
         value="0"
         icon={<MdHistory />}
         iconClassName="bg-orange-100 text-orange-600"
-      /> */}
+      />
 
       {/* 4. Orders Card */}
       <Card
@@ -128,18 +128,22 @@ const CardElements = () => {
           {
             label: "Read More",
             icon: MdArrowForward,
+            iconPosition: "end",
             variant: "outline",
           },
         ]}
       />
 
-      {/* 6. Header Footer Card */}
+      {/* 6. Header / Footer Card */}
       <Card
         header={
           <div className="flex items-center justify-between">
             <h2 className="font-semibold">Recent Orders</h2>
 
-            <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+            <button
+              type="button"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
               View All
             </button>
           </div>
@@ -185,7 +189,8 @@ const CardElements = () => {
         ]}
       >
         <p className="text-sm text-gray-500">
-          Passionate designer who loves creating beautiful user experiences.
+          Passionate designer who loves creating beautiful user
+          experiences.
         </p>
       </Card>
 
@@ -201,7 +206,10 @@ const CardElements = () => {
               Aug 30, 2026
             </span>
 
-            <button className="flex items-center gap-1 text-sm font-medium text-blue-600">
+            <button
+              type="button"
+              className="flex items-center gap-1 text-sm font-medium text-blue-600"
+            >
               Read More
               <MdArrowForward />
             </button>
@@ -239,11 +247,13 @@ const CardElements = () => {
           {
             label: "Edit",
             icon: MdEdit,
+            iconPosition: "start",
             variant: "outline",
           },
           {
             label: "Delete",
             icon: MdDelete,
+            iconPosition: "start",
             variant: "danger",
           },
         ]}
@@ -264,6 +274,7 @@ const CardElements = () => {
           {
             label: "Explore Now",
             icon: MdArrowForward,
+            iconPosition: "end",
             variant: "outline",
           },
         ]}
@@ -275,6 +286,49 @@ const CardElements = () => {
         iconClassName="bg-purple-100 text-purple-600"
         title="Bookmarks"
         description="Save your important bookmarks and access them anywhere."
+      />
+
+      {/* 14. Dark Mode Card */}
+      <Card
+        darkMode
+        icon={<MdLightbulb size={26} />}
+        iconClassName="bg-yellow-500/20 text-yellow-400"
+        title="Dark Mode"
+        description="This card demonstrates the reusable dark mode option."
+        actions={[
+          {
+            label: "Explore",
+            icon: MdArrowForward,
+            iconPosition: "end",
+            variant: "outline",
+          },
+        ]}
+      />
+
+      {/* 15. Custom Width Card */}
+      <Card
+        width="sm"
+        title="Small Width"
+        description="Reusable card width can be controlled through the width prop."
+        className="border-blue-200"
+      />
+
+      {/* 16. Custom Card */}
+      <Card
+        title="Custom Styled Card"
+        description="Customize the card using className and individual class props."
+        className="border-2 border-dashed border-purple-300 shadow-none"
+        titleClassName="text-purple-700"
+        descriptionClassName="text-purple-500"
+        bodyClassName="bg-purple-50"
+        actions={[
+          {
+            label: "Continue",
+            icon: MdArrowForward,
+            iconPosition: "end",
+            variant: "primary",
+          },
+        ]}
       />
 
     </div>

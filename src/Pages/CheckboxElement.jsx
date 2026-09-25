@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Checkbox from "../components/ui/forms/Checkbox";
+import Checkbox from "../components/forms/Checkbox";
 
 const CheckboxElement = () => {
   const [selectedPermissions, setSelectedPermissions] = useState([
@@ -90,6 +90,7 @@ const CheckboxElement = () => {
 
   return (
     <div className="space-y-10 p-5">
+      {/* Single Checkbox */}
       <section>
         <h2 className="mb-5 text-base font-bold text-purple-700">
           1. SINGLE CHECKBOX EXAMPLES
@@ -155,7 +156,7 @@ const CheckboxElement = () => {
           {/* Label Left */}
           <div className="rounded-lg border border-gray-200 p-5">
             <h3 className="mb-6 text-sm font-semibold text-gray-800">
-              With Label Left
+              Label Left
             </h3>
 
             <Checkbox
@@ -177,14 +178,14 @@ const CheckboxElement = () => {
 
             <div className="space-y-4">
               <Checkbox
-                label="Small Checkbox (sm)"
+                label="Small Checkbox"
                 name="small"
                 value="small"
                 inputClassName="h-4 w-4 accent-purple-600"
               />
 
               <Checkbox
-                label="Medium Checkbox (md)"
+                label="Medium Checkbox"
                 name="medium"
                 value="medium"
                 defaultChecked
@@ -192,7 +193,7 @@ const CheckboxElement = () => {
               />
 
               <Checkbox
-                label="Large Checkbox (lg)"
+                label="Large Checkbox"
                 name="large"
                 value="large"
                 defaultChecked
@@ -241,11 +242,13 @@ const CheckboxElement = () => {
               value="success"
               defaultChecked
               inputClassName="accent-green-600"
+              labelTextClassName="font-medium text-green-700"
             />
           </div>
         </div>
       </section>
 
+      {/* Checkbox Group */}
       <section>
         <h2 className="mb-5 text-base font-bold text-purple-700">
           2. CHECKBOX GROUP (MULTIPLE SELECTION)
@@ -269,9 +272,13 @@ const CheckboxElement = () => {
                   label={permission.label}
                   name="permissions"
                   value={permission.value}
-                  checked={selectedPermissions.includes(permission.value)}
+                  checked={selectedPermissions.includes(
+                    permission.value
+                  )}
                   onChange={() =>
-                    handlePermissionChange(permission.value)
+                    handlePermissionChange(
+                      permission.value
+                    )
                   }
                 />
               ))}
@@ -326,7 +333,9 @@ const CheckboxElement = () => {
                   label={item.label}
                   name="modules"
                   value={item.value}
-                  defaultChecked={[0, 2, 4, 6].includes(index)}
+                  defaultChecked={[0, 2, 4, 6].includes(
+                    index
+                  )}
                 />
               ))}
             </div>
@@ -386,14 +395,16 @@ const CheckboxElement = () => {
             </p>
 
             <div className="space-y-3">
-              {["Create", "Read", "Update", "Delete"].map((item) => (
-                <Checkbox
-                  key={item}
-                  label={item}
-                  name="crud"
-                  value={item.toLowerCase()}
-                />
-              ))}
+              {["Create", "Read", "Update", "Delete"].map(
+                (item) => (
+                  <Checkbox
+                    key={item}
+                    label={item}
+                    name="crud"
+                    value={item.toLowerCase()}
+                  />
+                )
+              )}
             </div>
 
             <p className="mt-3 text-xs text-red-500">
@@ -440,8 +451,12 @@ const CheckboxElement = () => {
                   label={module.label}
                   name="modules"
                   value={module.value}
-                  checked={selectedModules.includes(module.value)}
-                  onChange={() => handleModuleChange(module.value)}
+                  checked={selectedModules.includes(
+                    module.value
+                  )}
+                  onChange={() =>
+                    handleModuleChange(module.value)
+                  }
                 />
               ))}
             </div>
@@ -464,8 +479,12 @@ const CheckboxElement = () => {
                   label={fruit.label}
                   name="fruits"
                   value={fruit.value}
-                  checked={selectedFruits.includes(fruit.value)}
-                  onChange={() => handleFruitChange(fruit.value)}
+                  checked={selectedFruits.includes(
+                    fruit.value
+                  )}
+                  onChange={() =>
+                    handleFruitChange(fruit.value)
+                  }
                 />
               ))}
             </div>
@@ -491,7 +510,9 @@ const CheckboxElement = () => {
 
                   <button
                     type="button"
-                    onClick={() => handleFruitChange(fruit.value)}
+                    onClick={() =>
+                      handleFruitChange(fruit.value)
+                    }
                     className="text-sm leading-none hover:text-gray-200"
                   >
                     ×

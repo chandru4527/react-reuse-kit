@@ -1,4 +1,4 @@
-import Input from "../components/ui/forms/Input";
+import Input from "../components/forms/Input";
 import {
   MdEmail,
   MdSearch,
@@ -14,13 +14,19 @@ import {
 
 const InputElement = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen flex-1 bg-gray-50 p-6">
       <div className="mx-auto max-w-7xl">
+
         {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold text-gray-900">
             Input Components
           </h1>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Basic, icons, password, validation, custom styling
+            and different input types
+          </p>
         </div>
 
         {/* Input Examples */}
@@ -42,7 +48,7 @@ const InputElement = () => {
           {/* 2. Left Icon */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              2. Input with Left Icon
+              2. Left Icon
             </h2>
 
             <Input
@@ -58,7 +64,7 @@ const InputElement = () => {
           {/* 3. Right Icon */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              3. Input with Right Icon
+              3. Right Icon
             </h2>
 
             <Input
@@ -82,7 +88,8 @@ const InputElement = () => {
               name="username"
               placeholder="Enter username"
               icon={MdPerson}
-              iconClassName="text-blue-500 text-xl"
+              iconSize={24}
+              iconClassName="text-purple-500"
             />
           </div>
 
@@ -119,10 +126,25 @@ const InputElement = () => {
             />
           </div>
 
-          {/* 7. Helper Text */}
+          {/* 7. Custom Error */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              7. Input with Helper Text
+              7. Custom Error Style
+            </h2>
+
+            <Input
+              label="Username"
+              name="username"
+              placeholder="Enter username"
+              error="Username already exists"
+              errorClassName="font-medium text-orange-500"
+            />
+          </div>
+
+          {/* 8. Helper Text */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              8. Helper Text
             </h2>
 
             <Input
@@ -136,10 +158,26 @@ const InputElement = () => {
             />
           </div>
 
-          {/* 8. Disabled */}
+          {/* 9. Custom Helper */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              8. Disabled Input
+              9. Custom Helper Style
+            </h2>
+
+            <Input
+              label="Password"
+              type="password"
+              name="passwordInfo"
+              placeholder="Create password"
+              helperText="Use at least 8 characters."
+              helperTextClassName="text-blue-500"
+            />
+          </div>
+
+          {/* 10. Disabled */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              10. Disabled Input
             </h2>
 
             <Input
@@ -147,16 +185,31 @@ const InputElement = () => {
               name="organization"
               value="Cookedin Technologies"
               icon={MdBusiness}
-              iconClassName="text-blue-600"
+              iconClassName="text-gray-400"
               disabled
               readOnly
             />
           </div>
 
-          {/* 9. Date */}
+          {/* 11. Read Only */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              9. Date Input
+              11. Read Only Input
+            </h2>
+
+            <Input
+              label="User ID"
+              name="userId"
+              value="USR-10245"
+              readOnly
+              inputClassName="bg-gray-100"
+            />
+          </div>
+
+          {/* 12. Date */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              12. Date Input
             </h2>
 
             <Input
@@ -168,10 +221,10 @@ const InputElement = () => {
             />
           </div>
 
-          {/* 10. Time */}
+          {/* 13. Time */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              10. Time Input
+              13. Time Input
             </h2>
 
             <Input
@@ -183,10 +236,10 @@ const InputElement = () => {
             />
           </div>
 
-          {/* 11. Number */}
+          {/* 14. Number */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              11. Number Input
+              14. Number Input
             </h2>
 
             <Input
@@ -201,10 +254,40 @@ const InputElement = () => {
             />
           </div>
 
-          {/* 12. Custom Styling */}
+          {/* 15. Search */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              12. Custom Styling
+              15. Search Input
+            </h2>
+
+            <Input
+              type="search"
+              label="Search"
+              name="searchInput"
+              placeholder="Search products..."
+              icon={MdSearch}
+              iconClassName="text-gray-500"
+            />
+          </div>
+
+          {/* 16. URL */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              16. URL Input
+            </h2>
+
+            <Input
+              type="url"
+              label="Website"
+              name="website"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          {/* 17. Custom Styling */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              17. Custom Styling
             </h2>
 
             <Input
@@ -212,67 +295,82 @@ const InputElement = () => {
               name="custom"
               placeholder="Custom style"
               icon={MdStar}
-              iconClassName="text-purple-500 text-xl"
+              iconSize={24}
+              iconClassName="text-purple-500"
               inputClassName="border-purple-500 focus:border-purple-600 focus:ring-2 focus:ring-purple-200"
             />
           </div>
 
-          {/* 13. Custom Label */}
+          {/* 18. Custom Label */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              13. Custom Label
+              18. Custom Label
             </h2>
 
             <Input
               label="Username"
-              name="username"
+              name="customLabel"
               placeholder="Enter username"
-              labelClassName="text-blue-600 font-semibold"
+              labelClassName="font-semibold text-blue-600"
             />
           </div>
 
-          {/* 14. No Border */}
+          {/* 19. No Border */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              14. No Border
+              19. No Border
             </h2>
 
             <Input
               label="Username"
-              name="username"
+              name="noBorder"
               placeholder="Enter username"
               inputClassName="border-0 bg-transparent shadow-none focus:border-0"
             />
           </div>
 
-          {/* 15. Bottom Border */}
+          {/* 20. Bottom Border */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              15. Bottom Border
+              20. Bottom Border
             </h2>
 
             <Input
               label="Username"
-              name="username"
+              name="bottomBorder"
               placeholder="Enter username"
               inputClassName="rounded-none border-x-0 border-t-0 border-b-2 border-blue-500 focus:border-blue-600"
             />
           </div>
 
-          {/* 16. Required Input */}
+          {/* 21. Required */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">
-              16. Required Input
+              21. Required Input
             </h2>
 
             <Input
               type="email"
               label="Email"
-              name="email"
+              name="requiredEmail"
               placeholder="Enter your email"
               icon={MdEmail}
               iconClassName="text-blue-600"
               required
+            />
+          </div>
+
+          {/* 22. Password Without Icon */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">
+              22. Password Without Icon
+            </h2>
+
+            <Input
+              type="password"
+              label="Password"
+              name="simplePassword"
+              placeholder="Enter password"
             />
           </div>
 

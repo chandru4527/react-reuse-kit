@@ -3,7 +3,7 @@ import AdminLayout from "../layout/AdminLayout";
 import Dashboard from "../Pages/Dashboard";
 import ButtonElement from "../Pages/ButtonElement";
 import CardElement from "../Pages/CardElement";
-import InputElement from "../Pages/inputElement";
+import InputElement from "../Pages/InputElement";
 import TableElements from "../Pages/TableElements";
 import SelectElement from "../Pages/SelectElement";
 import TextareaElement from "../Pages/TextareaElement";
@@ -25,6 +25,7 @@ import SliderElements from "../Pages/SliderElements";
 import ImageElements from "../Pages/ImageElements";
 import VideoElements from "../Pages/VideoElements";
 import AudioElements from "../Pages/AudioElements";
+import EmptyStateElements from  '../Pages/EmptyStateElements'
 
 const routers = createBrowserRouter([
   {
@@ -206,6 +207,13 @@ const routers = createBrowserRouter([
       {
         path: "media-elements/audio",
         element: <AudioElements />,
+        handle: {
+          title: "Audio",
+        },
+      },
+      {
+        path: "feedback/empty-state",
+        element: <EmptyStateElements />,
         handle: {
           title: "Audio",
         },

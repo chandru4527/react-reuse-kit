@@ -5,7 +5,7 @@ import {
   MdLocationCity,
   MdStar,
 } from "react-icons/md";
-import Select from "../components/ui/forms/Select";
+import Select from "../components/forms/Select";
 
 const SelectElement = () => {
   const [category, setCategory] = useState("");
@@ -13,6 +13,7 @@ const SelectElement = () => {
   const [status, setStatus] = useState("");
   const [city, setCity] = useState("");
   const [selectedOption, setSelectedOption] = useState("option2");
+  const [errorValue, setErrorValue] = useState("");
 
   const basicOptions = [
     { label: "Option One", value: "option1" },
@@ -53,8 +54,7 @@ const SelectElement = () => {
 
   const longTextOptions = [
     {
-      label:
-        "This is a very long option text that should not go outside the select component",
+      label: "This is a very long option text that should not go outside the select component",
       value: "long1",
     },
     { label: "Short Option", value: "short" },
@@ -69,7 +69,6 @@ const SelectElement = () => {
     <div className="min-h-screen bg-gray-50 p-6 lg:p-10">
       <div className="mx-auto max-w-7xl">
 
-        {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-gray-900">
             Select Components
@@ -81,7 +80,6 @@ const SelectElement = () => {
           </p>
         </div>
 
-        {/* Basic Examples */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
 
           {/* 1. Basic */}
@@ -115,7 +113,7 @@ const SelectElement = () => {
             />
           </div>
 
-          {/* 3. Left Icon */}
+          {/* 3. Icon */}
           <div>
             <h3 className="mb-3 text-sm font-semibold text-gray-800">
               3. With Icon
@@ -210,11 +208,11 @@ const SelectElement = () => {
             <Select
               label="Category"
               name="error"
-              value=""
+              value={errorValue}
               options={categoryOptions}
               placeholder="Select category"
-              error="Please select a category"
-              onChange={() => { }}
+              error={!errorValue ? "Please select a category" : ""}
+              onChange={(e) => setErrorValue(e.target.value)}
             />
           </div>
 
@@ -260,7 +258,7 @@ const SelectElement = () => {
 
             <Select
               label="Category"
-              labelClassName="text-blue-600 font-semibold"
+              labelClassName="font-semibold text-blue-600"
               name="customLabel"
               value={category}
               options={categoryOptions}
@@ -282,10 +280,77 @@ const SelectElement = () => {
               options={categoryOptions}
               placeholder="Choose category"
               icon={MdStar}
-              iconClassName="text-purple-500 text-xl"
+              iconClassName="text-xl text-purple-500"
               selectClassName="border-purple-500 focus:border-purple-600"
               dropdownClassName="border-purple-200 shadow-xl"
               onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+
+          {/* 13. No Border */}
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">
+              13. No Border
+            </h3>
+
+            <Select
+              label="Category"
+              name="noBorder"
+              value={category}
+              options={categoryOptions}
+              placeholder="Choose category"
+              selectClassName="border-0 bg-gray-100"
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+
+          {/* 14. Rounded */}
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">
+              14. Rounded
+            </h3>
+
+            <Select
+              label="Country"
+              name="rounded"
+              value={country}
+              options={countryOptions}
+              placeholder="Select country"
+              selectClassName="rounded-full"
+              onChange={(e) => setCountry(e.target.value)}
+            />
+          </div>
+
+          {/* 15. Custom Container */}
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">
+              15. Custom Container
+            </h3>
+
+            <Select
+              label="Category"
+              name="customContainer"
+              value={category}
+              options={categoryOptions}
+              placeholder="Choose category"
+              className="rounded-xl bg-white p-4 shadow-md"
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+
+          {/* 16. Empty Options */}
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">
+              16. Empty Options
+            </h3>
+
+            <Select
+              label="Category"
+              name="empty"
+              value=""
+              options={[]}
+              placeholder="No categories"
+              onChange={() => { }}
             />
           </div>
 
@@ -294,7 +359,7 @@ const SelectElement = () => {
         {/* Multiple Instances */}
         <div className="mt-12">
           <h3 className="mb-5 text-sm font-semibold text-gray-800">
-            13. Multiple Instances
+            17. Multiple Instances
           </h3>
 
           <div className="grid max-w-4xl grid-cols-1 gap-5 md:grid-cols-3">

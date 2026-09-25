@@ -6,10 +6,12 @@ import {
     MdNotes,
     MdLocationOn,
     MdFeedback,
+    MdPerson,
+    MdEmail,
 } from "react-icons/md";
 
-import Textarea from "../components/ui/forms/Textarea";
-import Button from "../components/ui/buttons/Button";
+import Textarea from "../components/forms/Textarea";
+import Button from "../components/buttons/Button";
 
 const TextareaElement = () => {
     const [message, setMessage] = useState("");
@@ -25,7 +27,7 @@ const TextareaElement = () => {
     };
 
     return (
-        <div className="space-y-10 p-6">
+        <div className="space-y-10 bg-gray-50 p-6">
             {/* Header */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800">
@@ -189,8 +191,7 @@ const TextareaElement = () => {
                                 required: "Message is required",
                                 minLength: {
                                     value: 10,
-                                    message:
-                                        "Message must be at least 10 characters",
+                                    message: "Message must be at least 10 characters",
                                 },
                             })}
                             error={errors.message?.message}
@@ -217,24 +218,38 @@ const TextareaElement = () => {
                     />
                 </section>
 
-                {/* 11. Custom Label */}
+                {/* 11. Default Value */}
                 <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <h2 className="mb-4 text-lg font-semibold text-gray-800">
-                        11. Custom Label
+                        11. Default Value
+                    </h2>
+
+                    <Textarea
+                        label="About"
+                        defaultValue="This is a default textarea value."
+                        placeholder="Enter something..."
+                        rows={5}
+                    />
+                </section>
+
+                {/* 12. Custom Label */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        12. Custom Label
                     </h2>
 
                     <Textarea
                         label="Description"
-                        labelClassName="text-blue-600 font-semibold"
+                        labelClassName="font-semibold text-blue-600"
                         placeholder="Enter description..."
                         rows={5}
                     />
                 </section>
 
-                {/* 12. Custom Styling */}
+                {/* 13. Custom Styling */}
                 <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <h2 className="mb-4 text-lg font-semibold text-gray-800">
-                        12. Custom Styling
+                        13. Custom Styling
                     </h2>
 
                     <Textarea
@@ -243,6 +258,96 @@ const TextareaElement = () => {
                         textareaClassName="border-purple-500 focus:border-purple-600"
                         icon={MdNotes}
                         iconClassName="text-purple-500"
+                        rows={5}
+                    />
+                </section>
+
+                {/* 14. Custom Error Styling */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        14. Custom Error Styling
+                    </h2>
+
+                    <Textarea
+                        label="Feedback"
+                        placeholder="Enter your feedback..."
+                        error="Please enter your feedback"
+                        errorClassName="font-medium text-orange-500"
+                        rows={5}
+                    />
+                </section>
+
+                {/* 15. Custom Helper Styling */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        15. Custom Helper Styling
+                    </h2>
+
+                    <Textarea
+                        label="Email Content"
+                        placeholder="Write your email..."
+                        icon={MdEmail}
+                        iconClassName="text-blue-500"
+                        helperText="Keep your message clear and concise."
+                        helperTextClassName="text-blue-500"
+                        rows={5}
+                    />
+                </section>
+
+                {/* 16. Small Textarea */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        16. Small Textarea
+                    </h2>
+
+                    <Textarea
+                        label="Short Note"
+                        placeholder="Enter a short note..."
+                        rows={2}
+                    />
+                </section>
+
+                {/* 17. Large Textarea */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        17. Large Textarea
+                    </h2>
+
+                    <Textarea
+                        label="Detailed Description"
+                        placeholder="Enter detailed description..."
+                        rows={8}
+                    />
+                </section>
+
+                {/* 18. No Resize */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        18. No Resize
+                    </h2>
+
+                    <Textarea
+                        label="Message"
+                        placeholder="This textarea cannot be resized..."
+                        textareaClassName="resize-none"
+                        rows={5}
+                    />
+                </section>
+
+                {/* 19. User Profile */}
+                <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                        19. User Profile
+                    </h2>
+
+                    <Textarea
+                        label="About Me"
+                        placeholder="Tell us about yourself..."
+                        icon={MdPerson}
+                        iconPosition="left"
+                        iconClassName="text-blue-600"
+                        maxLength={300}
+                        showCount
                         rows={5}
                     />
                 </section>
