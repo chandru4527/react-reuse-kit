@@ -45,6 +45,20 @@ const ButtonElement = () => {
                         <Button variant="outline">Outline</Button>
                         <Button variant="ghost">Ghost</Button>
                     </div>
+
+                    <h3 className="mb-4 mt-8 text-sm font-semibold text-gray-600">
+                        Theme Variants
+                    </h3>
+
+                    <div className="flex flex-wrap gap-5">
+                        <Button variant="theme">Theme</Button>
+                        <Button variant="themeOutline">Theme Outline</Button>
+                        <Button variant="themeGhost">Theme Ghost</Button>
+                        <Button variant="themeLight">Theme Light</Button>
+                        <Button variant="themeDark">Theme Dark</Button>
+                        <Button variant="themeSoft">Theme Soft</Button>
+                        <Button variant="themeText" title="close" icon={MdClose} />
+                    </div>
                 </section>
 
                 {/* Sizes */}

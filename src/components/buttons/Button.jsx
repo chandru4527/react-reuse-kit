@@ -2,13 +2,16 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 /**
+ * Reusable Button component.
+ *
  * @param {Object} props
- * @param {React.ReactNode} props.children
+ * @param {React.ReactNode} [props.children]
+ * @param {string} [props.text]
  * @param {"button" | "submit" | "reset"} [props.type="button"]
- * @param {"normal" | "primary" | "secondary" | "success" | "danger" | "warning" | "outline" | "ghost"} [props.variant="primary"]
+ * @param {"normal" | "primary" | "secondary" | "success" | "danger" | "warning" | "outline" | "ghost" | "theme" | "themeOutline" | "themeGhost" | "themeLight" | "themeDark" | "themeSoft" | "themeText"} [props.variant="primary"]
  * @param {"xs" | "sm" | "md" | "lg" | "xl"} [props.size="md"]
  * @param {"default" | "rounded" | "full" | "square"} [props.shape="default"]
- * @param {React.ElementType | React.ReactElement} [props.icon]
+ * @param {React.ElementType} [props.icon]
  * @param {"start" | "end"} [props.iconPosition="start"]
  * @param {number} [props.iconSize=20]
  * @param {string} [props.iconClassName=""]
@@ -18,10 +21,12 @@ import { twMerge } from "tailwind-merge";
  * @param {boolean} [props.fullWidth=false]
  * @param {string} [props.className=""]
  * @param {(event: React.MouseEvent<HTMLButtonElement>) => void} [props.onClick]
+ * @param {string} [props.title=""]
  */
 
 const Button = ({
   children,
+  text,
   type = "button",
   variant = "primary",
   size = "md",
@@ -36,13 +41,14 @@ const Button = ({
   fullWidth = false,
   className = "",
   onClick,
+  title = "",
   ...props
 }) => {
   const baseStyles =
-    "inline-flex flex-row items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none disabled:pointer-events-none disabled:opacity-70 cursor-pointer";
+    "inline-flex flex-row items-center justify-center gap-2 font-medium transition-all duration-200 focus:outline-none disabled:opacity-70 cursor-pointer";
 
   const variants = {
-    normal: "",
+    normal: "text-black hover:bg-gray-100",
     primary: "bg-blue-600 text-white hover:bg-blue-700",
     secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
     success: "bg-green-600 text-white hover:bg-green-700",
@@ -50,6 +56,15 @@ const Button = ({
     warning: "bg-yellow-500 text-white hover:bg-yellow-600",
     outline: "border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
     ghost: "text-blue-600 hover:bg-blue-50",
+
+    // Green theme variants
+    theme: "bg-green-600 text-white hover:bg-green-700",
+    themeOutline: "border border-green-600 text-green-600 hover:bg-green-600 hover:text-white",
+    themeGhost: "text-green-600 hover:bg-green-50",
+    themeLight: "bg-green-100 text-green-800 hover:bg-green-200",
+    themeDark: "bg-green-800 text-white hover:bg-green-900",
+    themeSoft: "bg-green-50 text-green-700 hover:bg-green-100",
+    themeText: "text-black hover:bg-green-50",
   };
 
   const sizes = {
@@ -70,17 +85,6 @@ const Button = ({
   const renderIcon = () => {
     if (!Icon) return null;
 
-    if (React.isValidElement(Icon)) {
-      return React.cloneElement(Icon, {
-        size: Icon.props.size || iconSize,
-        className: twMerge(
-          "shrink-0",
-          Icon.props.className,
-          iconClassName
-        ),
-      });
-    }
-
     return (
       <Icon
         size={iconSize}
@@ -96,11 +100,12 @@ const Button = ({
       aria-disabled={disabled || loading}
       aria-busy={loading}
       onClick={onClick}
+      title={title}
       className={twMerge(
         baseStyles,
-        variants[variant],
-        sizes[size],
-        shapes[shape],
+        variants[variant] ?? variants.primary,
+        sizes[size] ?? sizes.md,
+        shapes[shape] ?? shapes.default,
         fullWidth && "w-full",
         className
       )}
@@ -114,9 +119,7 @@ const Button = ({
       ) : (
         <>
           {Icon && iconPosition === "start" && renderIcon()}
-
-          {children}
-
+          {children ?? text}
           {Icon && iconPosition === "end" && renderIcon()}
         </>
       )}
