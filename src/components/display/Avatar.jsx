@@ -1,9 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Badge from "../feedback/Badge";
 import { MdPerson } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 
 /**
+ * Reusable Avatar Component
+ *
  * @param {Object} props
  * @param {string} [props.src]
  * @param {string} [props.name=""]
@@ -20,6 +23,8 @@ import { twMerge } from "tailwind-merge";
  * @param {"normal" | "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "dark"} [props.badgeVariant="danger"]
  * @param {string} [props.badgeClassName=""]
  * @param {string} [props.className=""]
+ * @param {string} [props.to] - React Router destination
+ * @param {() => void} [props.onClick]
  */
 
 const Avatar = ({
@@ -38,6 +43,8 @@ const Avatar = ({
     badgeVariant = "danger",
     badgeClassName = "",
     className = "",
+    to,
+    onClick,
     ...props
 }) => {
     const sizes = {
@@ -99,10 +106,7 @@ const Avatar = ({
 
         if (React.isValidElement(icon)) {
             return React.cloneElement(icon, {
-                className: twMerge(
-                    "h-1/2 w-1/2",
-                    icon.props.className
-                ),
+                className: twMerge("h-1/2 w-1/2", icon.props.className),
             });
         }
 
@@ -111,11 +115,8 @@ const Avatar = ({
         return <Icon className="h-1/2 w-1/2" />;
     };
 
-    return (
-        <div
-            className={twMerge("relative inline-block", className)}
-            {...props}
-        >
+    const avatarContent = (
+        <>
             <div
                 className={avatarClass}
                 style={
@@ -163,6 +164,32 @@ const Avatar = ({
                     )}
                 />
             )}
+        </>
+    );
+
+    const wrapperClass = twMerge("relative inline-block", className);
+
+    if (to) {
+        return (
+            <Link
+                to={to}
+                className={wrapperClass}
+                aria-label={name ? `View ${name}'s profile` : "View profile"}
+                onClick={onClick}
+                {...props}
+            >
+                {avatarContent}
+            </Link>
+        );
+    }
+
+    return (
+        <div
+            className={wrapperClass}
+            onClick={onClick}
+            {...props}
+        >
+            {avatarContent}
         </div>
     );
 };
