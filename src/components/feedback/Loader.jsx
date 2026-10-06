@@ -2,9 +2,11 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 /**
+ * Reusable Loader Component
+ *
  * @param {Object} props
  * @param {"xs" | "sm" | "md" | "lg" | "xl"} [props.size="md"]
- * @param {"spinner" | "ring" | "dots"} [props.variant="spinner"]
+ * @param {"spinner" | "ring" | "dots" | "pulse" | "bars" | "wave" | "progress" | "dual-ring"} [props.variant="spinner"]
  * @param {"blue" | "red" | "green" | "yellow" | "gray" | "white" | "black" | string} [props.color="blue"]
  * @param {React.ReactNode} [props.text]
  * @param {boolean} [props.fullscreen=false]
@@ -42,6 +44,14 @@ const Loader = ({
         xl: "h-3.5 w-3.5",
     };
 
+    const barSizes = {
+        xs: "h-3",
+        sm: "h-4",
+        md: "h-6",
+        lg: "h-8",
+        xl: "h-10",
+    };
+
     const colors = {
         blue: "border-blue-200 border-t-blue-600",
         red: "border-red-200 border-t-red-600",
@@ -62,9 +72,30 @@ const Loader = ({
         black: "bg-gray-900",
     };
 
+    const progressColors = {
+        blue: "bg-blue-600",
+        red: "bg-red-600",
+        green: "bg-green-600",
+        yellow: "bg-yellow-600",
+        gray: "bg-gray-600",
+        white: "bg-white",
+        black: "bg-gray-900",
+    };
+
+    const progressTrackColors = {
+        blue: "bg-blue-100",
+        red: "bg-red-100",
+        green: "bg-green-100",
+        yellow: "bg-yellow-100",
+        gray: "bg-gray-200",
+        white: "bg-gray-200",
+        black: "bg-gray-200",
+    };
+
     const variantClasses = {
         spinner: "rounded-full animate-spin",
         ring: "rounded-full border-dashed animate-spin",
+        "dual-ring": "rounded-full animate-spin",
     };
 
     const isCustomColor = !colors[color];
@@ -82,46 +113,151 @@ const Loader = ({
 
     const currentSize = sizes[size] || sizes.md;
     const currentDotSize = dotSizes[size] || dotSizes.md;
+    const currentBarSize = barSizes[size] || barSizes.md;
     const currentColor = colors[color] || colors.blue;
     const currentDotColor = dotColors[color] || dotColors.blue;
+    const currentProgressColor = progressColors[color] || progressColors.blue;
+    const currentTrackColor = progressTrackColors[color] || progressTrackColors.blue;
 
     const renderLoader = () => {
+        // Dots
         if (variant === "dots") {
             return (
-                <div className="flex items-center gap-1">
-                    <span
-                        className={twMerge(
-                            "rounded-full animate-bounce",
-                            currentDotSize,
-                            !isCustomColor && currentDotColor,
-                            loaderClassName
-                        )}
-                        style={dotStyle}
-                    />
+                <div
+                    className={twMerge("flex items-center gap-1", loaderClassName)}
+                    role="status"
+                    aria-label="Loading"
+                >
+                    {[0, 1, 2].map((item) => (
+                        <span
+                            key={item}
+                            className={twMerge(
+                                "rounded-full animate-bounce",
+                                currentDotSize,
+                                !isCustomColor && currentDotColor
+                            )}
+                            style={{
+                                ...dotStyle,
+                                animationDelay: `${item * 150}ms`,
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        }
 
-                    <span
-                        className={twMerge(
-                            "rounded-full animate-bounce [animation-delay:-0.15s]",
-                            currentDotSize,
-                            !isCustomColor && currentDotColor,
-                            loaderClassName
-                        )}
-                        style={dotStyle}
-                    />
+        // Pulse
+        if (variant === "pulse") {
+            return (
+                <span
+                    className={twMerge(
+                        "rounded-full animate-pulse",
+                        currentDotSize,
+                        !isCustomColor && currentDotColor,
+                        loaderClassName
+                    )}
+                    style={dotStyle}
+                />
+            );
+        }
 
+        // Bars
+        if (variant === "bars") {
+            return (
+                <div
+                    className={twMerge(
+                        "flex items-center justify-center gap-1",
+                        currentBarSize,
+                        loaderClassName
+                    )}
+                    role="status"
+                    aria-label="Loading"
+                >
+                    {[0, 1, 2, 3, 4].map((item) => (
+                        <span
+                            key={item}
+                            className={twMerge(
+                                "w-1 rounded-full animate-pulse",
+                                !isCustomColor && currentDotColor
+                            )}
+                            style={{
+                                height: `${40 + (item % 3) * 20}%`,
+                                animationDelay: `${item * 100}ms`,
+                                ...(isCustomColor ? { backgroundColor: color } : {}),
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        }
+
+        // Wave
+        if (variant === "wave") {
+            return (
+                <div
+                    className={twMerge("flex items-center gap-1", loaderClassName)}
+                    role="status"
+                    aria-label="Loading"
+                >
+                    {[0, 1, 2, 3, 4].map((item) => (
+                        <span
+                            key={item}
+                            className={twMerge(
+                                "rounded-full animate-bounce",
+                                currentDotSize,
+                                !isCustomColor && currentDotColor
+                            )}
+                            style={{
+                                ...dotStyle,
+                                animationDelay: `${item * 100}ms`,
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        }
+
+        // Progress
+        if (variant === "progress") {
+            return (
+                <div
+                    className={twMerge(
+                        "h-1.5 w-32 overflow-hidden rounded-full",
+                        !isCustomColor && currentTrackColor,
+                        loaderClassName
+                    )}
+                    style={isCustomColor ? { backgroundColor: `${color}22` } : {}}
+                    role="progressbar"
+                    aria-label="Loading"
+                    aria-valuetext="Loading"
+                >
                     <span
                         className={twMerge(
-                            "rounded-full animate-bounce [animation-delay:-0.3s]",
-                            currentDotSize,
-                            !isCustomColor && currentDotColor,
-                            loaderClassName
+                            "block h-full w-1/2 rounded-full animate-[loader-progress_1.5s_ease-in-out_infinite]",
+                            !isCustomColor && currentProgressColor
                         )}
-                        style={dotStyle}
+                        style={isCustomColor ? { backgroundColor: color } : {}}
                     />
                 </div>
             );
         }
 
+        // Dual Ring
+        if (variant === "dual-ring") {
+            return (
+                <span
+                    className={twMerge(
+                        currentSize,
+                        "rounded-full border-4 border-b-transparent border-l-transparent animate-spin",
+                        !isCustomColor && currentColor,
+                        loaderClassName
+                    )}
+                    style={loaderStyle}
+                />
+            );
+        }
+
+        // Spinner / Ring
         return (
             <span
                 className={twMerge(
@@ -147,10 +283,7 @@ const Loader = ({
 
             {text && (
                 <span
-                    className={twMerge(
-                        "text-sm text-gray-600",
-                        textClassName
-                    )}
+                    className={twMerge("text-sm text-gray-600", textClassName)}
                 >
                     {text}
                 </span>
