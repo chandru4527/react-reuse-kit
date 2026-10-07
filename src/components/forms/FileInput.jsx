@@ -1,670 +1,692 @@
 import { useEffect, useRef, useState } from "react";
 import {
   MdCloudUpload,
-  MdClose,
-  MdPictureAsPdf,
-  MdDescription,
-  MdTableChart,
-  MdSlideshow,
-  MdVideoFile,
-  MdAudioFile,
   MdImage,
+  MdClose,
   MdInsertDriveFile,
-  MdPresentToAll 
+  MdMovie,
+  MdAudioFile,
+  MdDescription,
+  MdPresentToAll,
+  MdPictureAsPdf,
+  MdRefresh,
 } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 
+const VARIANT_CONFIG = {
+  profile: {
+    multiple: false,
+    accept: "image/*",
+    maxSize: 5,
+    label: "Profile Image",
+    buttonText: "Choose Image",
+  },
+  banner: {
+    multiple: false,
+    accept: "image/*",
+    maxSize: 5,
+    label: "Banner Image",
+    buttonText: "Upload Banner",
+  },
+  images: {
+    multiple: true,
+    accept: "image/*",
+    maxSize: 5,
+    label: "Upload Images",
+    buttonText: "Choose Images",
+  },
+  media: {
+    multiple: true,
+    accept: "video/*,audio/*",
+    maxSize: 50,
+    label: "Upload Media",
+    buttonText: "Choose Media",
+  },
+  documents: {
+    multiple: true,
+    accept: ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv",
+    maxSize: 10,
+    label: "Upload Documents",
+    buttonText: "Choose Documents",
+  },
+  default: {
+    multiple: false,
+    accept: "",
+    maxSize: 5,
+    label: "Upload File",
+    buttonText: "Choose File",
+  },
+};
+
 const FileInput = ({
+  variant = "default",
   label,
-  labelClassName = "",
-
   name,
-  multiple = false,
-  accept,
-  disabled = false,
-  required = false,
-
-  error,
-  errorClassName = "",
-
-  helperText,
-  helperTextClassName = "",
-
-  icon = true,
-  iconComponent,
-  iconClassName = "text-gray-500",
-
-  maxFiles,
-  maxSize,
-
-  preview = true,
-  showFileList = true,
-
-  value,
+  value = null,
   onChange,
   onRemove,
-
-  placeholder = "Click or drag files here",
-
+  multiple,
+  accept,
+  maxFiles = 5,
+  maxSize,
+  preview = true,
+  previewUrl = "",
+  showFileList = true,
+  showRemove = true,
+  buttonText,
+  placeholder,
+  helperText = "",
+  aspectRatio,
+  loading = false,
+  disabled = false,
+  required = false,
+  error = "",
   className = "",
-  inputClassName = "",
+  labelClassName = "",
+  containerClassName = "",
   uploadClassName = "",
-  fileListClassName = "",
-  fileItemClassName = "",
   previewClassName = "",
-  removeButtonClassName = "",
-
-  inputRef: externalInputRef,
-
-  ...props
+  buttonClassName = "",
+  fileListClassName = "",
+  helperClassName = "",
+  errorClassName = "",
+  iconClassName = "",
 }) => {
   const inputRef = useRef(null);
-
   const [isDragging, setIsDragging] = useState(false);
-  const [previewUrls, setPreviewUrls] = useState({});
+  const [localError, setLocalError] = useState("");
+  const [previewItems, setPreviewItems] = useState([]);
 
-  const files = value
+  const config = VARIANT_CONFIG[variant] || VARIANT_CONFIG.default;
+
+  const isMultiple = multiple ?? config.multiple;
+  const acceptedTypes = accept ?? config.accept;
+  const sizeLimit = maxSize ?? config.maxSize;
+  const inputLabel = label ?? config.label;
+  const uploadButtonText = buttonText ?? config.buttonText;
+
+  const files = isMultiple
     ? Array.isArray(value)
       ? value
-      : [value]
-    : [];
+      : []
+    : value
+      ? [value]
+      : [];
 
-  const getFileKey = (file) => {
-    return `${file.name}-${file.size}-${file.lastModified}`;
-  };
+  const displayError = error || localError;
 
-  // Create preview URLs
+  const defaultAspectRatio =
+    aspectRatio ||
+    (variant === "banner"
+      ? "16/9"
+      : variant === "profile"
+        ? "1/1"
+        : "4/3");
+
+  // Generate local previews for selected files.
   useEffect(() => {
-    const urls = {};
-
-    files.forEach((file) => {
-      if (
+    const items = files.map((file) => ({
+      file,
+      url:
         file instanceof File &&
-        (
-          file.type?.startsWith("image/") ||
-          file.type?.startsWith("video/") ||
-          file.type?.startsWith("audio/")
-        )
-      ) {
-        urls[getFileKey(file)] = URL.createObjectURL(file);
-      }
-    });
+          (file.type.startsWith("image/") ||
+            file.type.startsWith("video/") ||
+            file.type.startsWith("audio/"))
+          ? URL.createObjectURL(file)
+          : "",
+    }));
 
-    setPreviewUrls(urls);
+    setPreviewItems(items);
 
     return () => {
-      Object.values(urls).forEach((url) => {
-        URL.revokeObjectURL(url);
+      items.forEach(({ url }) => {
+        if (url) URL.revokeObjectURL(url);
       });
     };
   }, [value]);
 
-  // Get file icon
-  const getFileIcon = (file) => {
-    const type = file.type?.toLowerCase() || "";
-    const extension = file.name?.split(".").pop()?.toLowerCase();
-
-    if (type.startsWith("image/")) {
-      return MdImage;
-    }
-
-    if (type === "application/pdf" || extension === "pdf") {
-      return MdPictureAsPdf;
-    }
-
-    if (
-      type.includes("word") ||
-      ["doc", "docx"].includes(extension)
-    ) {
-      return MdDescription;
-    }
-
-    if (
-      type.includes("excel") ||
-      type.includes("spreadsheet") ||
-      ["xls", "xlsx", "csv"].includes(extension)
-    ) {
-      return MdTableChart;
-    }
-
-    if (
-      type.includes("powerpoint") ||
-      type.includes("presentation") ||
-      ["ppt", "pptx"].includes(extension)
-    ) {
-      return MdPresentToAll ;
-    }
-
-    if (
-      type.startsWith("video/") ||
-      ["mp4", "mov", "avi", "webm", "mkv"].includes(extension)
-    ) {
-      return MdVideoFile;
-    }
-
-    if (
-      type.startsWith("audio/") ||
-      ["mp3", "wav", "ogg", "aac", "m4a"].includes(extension)
-    ) {
-      return MdAudioFile;
-    }
-
-    return MdInsertDriveFile;
-  };
-
-  const isImageFile = (file) => {
-    const type = file.type?.toLowerCase() || "";
-    const extension = file.name?.split(".").pop()?.toLowerCase();
-
-    return (
-      type.startsWith("image/") ||
-      ["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(extension)
-    );
-  };
-
-  const isVideoFile = (file) => {
-    const type = file.type?.toLowerCase() || "";
-    const extension = file.name?.split(".").pop()?.toLowerCase();
-
-    return (
-      type.startsWith("video/") ||
-      ["mp4", "mov", "avi", "webm", "mkv"].includes(extension)
-    );
-  };
-
-  const isAudioFile = (file) => {
-    const type = file.type?.toLowerCase() || "";
-    const extension = file.name?.split(".").pop()?.toLowerCase();
-
-    return (
-      type.startsWith("audio/") ||
-      ["mp3", "wav", "ogg", "aac", "m4a"].includes(extension)
-    );
-  };
-
-  const formatFileSize = (bytes) => {
-    if (!bytes) return "0 KB";
-
-    if (bytes < 1024) {
-      return `${bytes} B`;
-    }
-
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
-    }
-
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
-  // Check duplicate
-  const isDuplicate = (file, existingFiles) => {
-    return existingFiles.some(
-      (existingFile) =>
-        existingFile.name === file.name &&
-        existingFile.size === file.size &&
-        existingFile.lastModified === file.lastModified
-    );
-  };
-
-  // Set internal and external refs
-  const setInputRef = (node) => {
-    inputRef.current = node;
-
-    if (typeof externalInputRef === "function") {
-      externalInputRef(node);
-    } else if (externalInputRef) {
-      externalInputRef.current = node;
-    }
-  };
-
-  // Handle selected files
-  const handleFiles = (selectedFiles) => {
-    if (disabled) return;
-
-    let selected = Array.from(selectedFiles);
-
-    if (!selected.length) return;
-
-    // Size validation
-    if (maxSize) {
-      selected = selected.filter(
-        (file) => file.size <= maxSize
-      );
-    }
-
-    if (!selected.length) return;
-
-    // Single file
-    if (!multiple) {
-      const file = selected[0];
-
-      onChange?.(file);
-
-      return;
-    }
-
-    // Remove duplicates against existing files
-    selected = selected.filter(
-      (file) => !isDuplicate(file, files)
+  const getPreviewUrl = (file, index) => {
+    const item = previewItems.find(
+      (previewItem) => previewItem.file === file
     );
 
-    // Remove duplicates inside current selection
-    const uniqueSelected = [];
+    if (item?.url) return item.url;
 
-    selected.forEach((file) => {
-      if (!isDuplicate(file, uniqueSelected)) {
-        uniqueSelected.push(file);
-      }
-    });
+    if (index === 0 && previewUrl) return previewUrl;
 
-    if (!uniqueSelected.length) return;
-
-    // Add new files
-    let updatedFiles = [
-      ...files,
-      ...uniqueSelected,
-    ];
-
-    // Maximum files
-    if (maxFiles) {
-      updatedFiles = updatedFiles.slice(0, maxFiles);
-    }
-
-    onChange?.(updatedFiles);
+    return "";
   };
 
-  // Input change
-  const handleChange = (event) => {
-    handleFiles(event.target.files);
-
-    // Allows selecting same file again
-    event.target.value = "";
-  };
-
-  // Drag over
-  const handleDragOver = (event) => {
-    event.preventDefault();
-
-    if (!disabled) {
-      setIsDragging(true);
-    }
-  };
-
-  // Drag leave
-  const handleDragLeave = (event) => {
-    event.preventDefault();
-
-    setIsDragging(false);
-  };
-
-  // Drop
-  const handleDrop = (event) => {
-    event.preventDefault();
-
-    setIsDragging(false);
-
-    if (!disabled) {
-      handleFiles(event.dataTransfer.files);
-    }
-  };
-
-  // Remove file
-  const handleRemove = (index) => {
-    const removedFile = files[index];
-
-    const updatedFiles = files.filter(
-      (_, fileIndex) => fileIndex !== index
-    );
-
-    if (multiple) {
-      onChange?.(updatedFiles);
-    } else {
-      onChange?.(null);
-    }
-
-    onRemove?.(removedFile, index);
-  };
-
-  // Open file picker
-  const handleClick = () => {
-    if (!disabled) {
+  const openFilePicker = () => {
+    if (!disabled && !loading) {
       inputRef.current?.click();
     }
   };
 
-  const UploadIcon = iconComponent || MdCloudUpload;
+  const isAcceptedFile = (file) => {
+    if (!acceptedTypes.trim()) return true;
 
-  // Remove button
-  const RemoveButton = ({ index }) => (
+    return acceptedTypes.split(",").some((rule) => {
+      const type = rule.trim().toLowerCase();
+      const fileName = file.name.toLowerCase();
+      const mimeType = file.type.toLowerCase();
+
+      if (type.endsWith("/*")) {
+        return mimeType.startsWith(type.slice(0, -1));
+      }
+
+      if (type.startsWith(".")) {
+        return fileName.endsWith(type);
+      }
+
+      return mimeType === type;
+    });
+  };
+
+  const handleFiles = (fileList) => {
+    if (disabled || loading) return;
+
+    const selectedFiles = Array.from(fileList || []);
+
+    if (!selectedFiles.length) return;
+
+    setLocalError("");
+
+    const validFiles = [];
+    const existingFiles = isMultiple ? files : [];
+
+    for (const file of selectedFiles) {
+      if (!isAcceptedFile(file)) {
+        setLocalError(`${file.name} is not an accepted file type.`);
+        continue;
+      }
+
+      if (file.size > sizeLimit * 1024 * 1024) {
+        setLocalError(
+          `${file.name} exceeds the ${sizeLimit}MB size limit.`
+        );
+        continue;
+      }
+
+      const isDuplicate = [...existingFiles, ...validFiles].some(
+        (existingFile) =>
+          existingFile.name === file.name &&
+          existingFile.size === file.size &&
+          existingFile.lastModified === file.lastModified
+      );
+
+      if (isDuplicate) continue;
+
+      if (isMultiple && existingFiles.length + validFiles.length >= maxFiles) {
+        setLocalError(`You can select a maximum of ${maxFiles} files.`);
+        break;
+      }
+
+      validFiles.push(file);
+    }
+
+    if (validFiles.length) {
+      onChange?.(
+        isMultiple
+          ? [...existingFiles, ...validFiles]
+          : validFiles[0]
+      );
+    }
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  const handleRemove = (index) => {
+    if (disabled || loading || !showRemove) return;
+
+    const removedFile = files[index];
+
+    onChange?.(
+      isMultiple
+        ? files.filter((_, fileIndex) => fileIndex !== index)
+        : null
+    );
+
+    onRemove?.(removedFile, index);
+    setLocalError("");
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setIsDragging(false);
+
+    if (!disabled && !loading) {
+      handleFiles(event.dataTransfer.files);
+    }
+  };
+
+  const getFileIcon = (file, size = 24) => {
+    if (file.type.startsWith("image/")) {
+      return <MdImage size={size} />;
+    }
+
+    if (file.type.startsWith("video/")) {
+      return <MdMovie size={size} />;
+    }
+
+    if (file.type.startsWith("audio/")) {
+      return <MdAudioFile size={size} />;
+    }
+
+    if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+      return <MdPictureAsPdf size={size} />;
+    }
+
+    if (/\.(ppt|pptx)$/i.test(file.name)) {
+      return <MdPresentToAll size={size} />;
+    }
+
+    if (/\.(doc|docx|txt)$/i.test(file.name)) {
+      return <MdDescription size={size} />;
+    }
+
+    return <MdInsertDriveFile size={size} />;
+  };
+
+  const formatSize = (size) => {
+    if (size < 1024 * 1024) {
+      return `${(size / 1024).toFixed(0)} KB`;
+    }
+
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+  };
+
+  const renderButton = (text = uploadButtonText) => (
     <button
       type="button"
-      onClick={(event) => {
-        event.stopPropagation();
-        handleRemove(index);
-      }}
+      onClick={openFilePicker}
+      disabled={disabled || loading}
       className={twMerge(
-        "absolute -right-1 -top-1 z-20 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-white shadow-sm transition hover:bg-red-600",
-        removeButtonClassName
+        "inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50",
+        buttonClassName
       )}
     >
-      <MdClose className="text-xs" />
+      {loading ? (
+        <>
+          <MdRefresh size={18} className="animate-spin" />
+          Uploading...
+        </>
+      ) : (
+        <>
+          <MdCloudUpload size={20} />
+          {text}
+        </>
+      )}
     </button>
+  );
+
+  const renderMediaPreview = (file, index) => {
+    const src = getPreviewUrl(file, index);
+
+    if (!preview) return null;
+
+    if (file.type.startsWith("image/") && src) {
+      return (
+        <img
+          src={src}
+          alt={file.name}
+          className="h-full w-full object-cover"
+        />
+      );
+    }
+
+    if (file.type.startsWith("video/") && src) {
+      return (
+        <video
+          src={src}
+          controls
+          className="h-full w-full bg-black object-contain"
+        />
+      );
+    }
+
+    if (file.type.startsWith("audio/") && src) {
+      return (
+        <div className="flex h-full flex-col items-center justify-center gap-3 p-3">
+          <MdAudioFile size={32} className="text-gray-500" />
+          <audio src={src} controls className="w-full" />
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-gray-500">
+        {getFileIcon(file, 30)}
+        <span className="max-w-full truncate text-xs">{file.name}</span>
+      </div>
+    );
+  };
+
+  const renderRemoveButton = (index, className = "") => {
+    if (!showRemove) return null;
+
+    return (
+      <button
+        type="button"
+        onClick={() => handleRemove(index)}
+        disabled={disabled || loading}
+        aria-label={`Remove ${files[index]?.name || "file"}`}
+        className={twMerge(
+          "flex items-center justify-center rounded-full text-gray-500 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50",
+          className
+        )}
+      >
+        <MdClose size={18} />
+      </button>
+    );
+  };
+
+  const renderFileList = () => (
+    <div
+      className={twMerge(
+        "divide-y divide-gray-200 rounded-lg border border-gray-200",
+        fileListClassName
+      )}
+    >
+      {files.map((file, index) => (
+        <div
+          key={`${file.name}-${file.lastModified}-${index}`}
+          className="flex min-w-0 items-center gap-3 p-3"
+        >
+          <span className="shrink-0 text-gray-500">
+            {getFileIcon(file)}
+          </span>
+
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium text-gray-700">
+              {file.name}
+            </p>
+            <p className="text-xs text-gray-500">
+              {formatSize(file.size)}
+            </p>
+          </div>
+
+          {renderRemoveButton(index)}
+        </div>
+      ))}
+    </div>
   );
 
   return (
     <div className={twMerge("w-full", className)}>
-      {/* Label */}
-      {label && (
+      {inputLabel && (
         <label
-          htmlFor={name}
           className={twMerge(
             "mb-2 block text-sm font-medium text-gray-700",
             labelClassName
           )}
         >
-          {label}
-
-          {required && (
-            <span className="ml-1 text-red-500">
-              *
-            </span>
-          )}
+          {inputLabel}
+          {required && <span className="ml-1 text-red-500">*</span>}
         </label>
       )}
 
-      {/* Hidden Input */}
       <input
-        ref={setInputRef}
+        ref={inputRef}
         id={name}
         name={name}
         type="file"
-        multiple={multiple}
-        accept={accept}
-        disabled={disabled}
-        required={required && files.length === 0}
-        onChange={handleChange}
-        className={twMerge(
-          "hidden",
-          inputClassName
-        )}
-        {...props}
+        accept={acceptedTypes}
+        multiple={isMultiple}
+        disabled={disabled || loading}
+        onChange={(event) => handleFiles(event.target.files)}
+        className="hidden"
       />
 
-      {/* Upload Area */}
-      <div
-        onClick={handleClick}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className={twMerge(
-          "flex min-h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 transition-all",
-          isDragging
-            ? "border-blue-500 bg-blue-50"
-            : error
-              ? "border-red-400 bg-red-50"
-              : "border-blue-600 bg-blue-50",
-          disabled
-            ? "cursor-not-allowed opacity-50"
-            : "hover:border-blue-500 hover:bg-blue-50",
-          uploadClassName
-        )}
-      >
-        {icon && (
-          <UploadIcon
-            className={twMerge(
-              "mb-2 text-4xl",
-              iconClassName
-            )}
-          />
-        )}
-
-        <p className="text-sm font-medium text-gray-700">
-          {placeholder}
-        </p>
-
-        <p className="mt-1 text-xs text-gray-500">
-          {multiple
-            ? "You can select multiple files"
-            : "Select one file"}
-        </p>
-      </div>
-
-      {/* Helper Text */}
-      {helperText && !error && (
-        <p
-          className={twMerge(
-            "mt-1 text-xs text-gray-500",
-            helperTextClassName
-          )}
-        >
-          {helperText}
-        </p>
-      )}
-
-      {/* Error */}
-      {error && (
-        <p
-          className={twMerge(
-            "mt-1 text-xs text-red-500",
-            errorClassName
-          )}
-        >
-          {error}
-        </p>
-      )}
-
-      {/* Preview */}
-      {preview && showFileList && files.length > 0 && (
-        <div
-          className={twMerge(
-            "mt-4",
-            previewClassName
-          )}
-        >
-          {/* Image Grid */}
-          {files.some(isImageFile) && (
-            <div
-              className={twMerge(
-                "grid grid-cols-2 gap-3 sm:grid-cols-3",
-                fileListClassName
-              )}
-            >
-              {files.map((file, index) => {
-                if (!isImageFile(file)) return null;
-
-                const fileKey = getFileKey(file);
-                const previewUrl =
-                  previewUrls[fileKey];
-
-                return (
-                  <div
-                    key={fileKey}
-                    className={twMerge(
-                      "relative h-28 w-28",
-                      fileItemClassName
-                    )}
-                  >
-                    {previewUrl && (
-                      <img
-                        src={previewUrl}
-                        alt={file.name}
-                        className="h-full w-full rounded border border-gray-300 object-contain"
-                      />
-                    )}
-
-                    <RemoveButton index={index} />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Document / Video / Audio */}
-          {files.some(
-            (file) => !isImageFile(file)
-          ) && (
-              <div className="mt-2 flex flex-col gap-2">
-                {files.map((file, index) => {
-                  if (isImageFile(file)) return null;
-
-                  const fileKey = getFileKey(file);
-                  const previewUrl =
-                    previewUrls[fileKey];
-
-                  const isVideo =
-                    isVideoFile(file);
-
-                  const isAudio =
-                    isAudioFile(file);
-
-                  const FileIcon =
-                    getFileIcon(file);
-
-                  {/* Video */ }
-                  if (isVideo) {
-                    return (
-                      <div
-                        key={fileKey}
-                        className={twMerge(
-                          "relative w-full rounded-lg border border-gray-200",
-                          fileItemClassName
-                        )}
-                      >
-                        {previewUrl && (
-                          <video
-                            src={previewUrl}
-                            controls
-                            className="aspect-video h-auto w-full rounded object-contain"
-                          />
-                        )}
-
-                        <RemoveButton
-                          index={index}
-                        />
-                      </div>
-                    );
-                  }
-
-                  {/* Audio */ }
-                  if (isAudio) {
-                    return (
-                      <div
-                        key={fileKey}
-                        className={twMerge(
-                          "relative flex w-full items-center gap-3 rounded border border-gray-200 bg-white p-3 pr-10",
-                          fileItemClassName
-                        )}
-                      >
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gray-100">
-                          <MdAudioFile className="text-2xl text-gray-500" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className="mb-2 truncate text-sm font-medium text-gray-700"
-                            title={file.name}
-                          >
-                            {file.name}
-                          </p>
-
-                          {previewUrl && (
-                            <audio
-                              src={previewUrl}
-                              controls
-                              className="h-10 w-full"
-                            />
-                          )}
-                        </div>
-
-                        <RemoveButton
-                          index={index}
-                        />
-                      </div>
-                    );
-                  }
-
-                  {/* Document */ }
-                  return (
-                    <div
-                      key={fileKey}
-                      className={twMerge(
-                        "relative flex w-full min-w-0 items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 pr-10",
-                        fileItemClassName
-                      )}
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gray-100">
-                        <FileIcon className="text-2xl text-gray-500" />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className="truncate text-sm font-medium text-gray-700"
-                          title={file.name}
-                        >
-                          {file.name}
-                        </p>
-
-                        <p className="mt-0.5 text-xs text-gray-400">
-                          {formatFileSize(file.size)}
-                        </p>
-                      </div>
-
-                      <RemoveButton
-                        index={index}
-                      />
-                    </div>
-                  );
-                })}
+      {/* PROFILE VARIANT */}
+      {variant === "profile" && (
+        <div className={twMerge("flex flex-col items-start gap-3", containerClassName)}>
+          <div className="relative h-30 w-30 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+            {preview && (getPreviewUrl(files[0], 0) || previewUrl) ? (
+              <img
+                src={getPreviewUrl(files[0], 0) || previewUrl}
+                alt="Profile preview"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-gray-400">
+                <MdImage size={36} />
               </div>
             )}
+
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                <span className="h-6 w-6 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {renderButton(files.length ? "Change Photo" : "Upload Photo")}
+            {files.length > 0 && renderRemoveButton(0, "h-9 w-9")}
+          </div>
         </div>
       )}
 
-      {/* Simple File List */}
-      {!preview &&
-        showFileList &&
-        files.length > 0 && (
-          <div className="mt-4 space-y-3">
-            {files.map((file, index) => {
-              const FileIcon =
-                getFileIcon(file);
+      {/* BANNER VARIANT */}
+      {variant === "banner" && (
+        <div className={twMerge(" rounded-lg border border-gray-200 bg-gray-50", containerClassName)}>
+          <div className="relative w-full aspect-16/8" >
+            {preview && (getPreviewUrl(files[0], 0) || previewUrl) ? (
+              <img
+                src={getPreviewUrl(files[0], 0) || previewUrl}
+                alt="Banner preview"
+                className="h-full w-full object-cover aspect-video"
+              />
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-2 text-gray-400">
+                <MdImage size={36} />
+                <span className="text-sm">No banner selected</span>
+              </div>
+            )}
 
-              const fileKey =
-                getFileKey(file);
+            {loading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50 text-sm text-white">
+                <span className="h-7 w-7 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                Uploading banner...
+              </div>
+            )}
 
-              return (
-                <div
-                  key={fileKey}
-                  className={twMerge(
-                    "relative mt-1 flex min-w-0 items-center gap-3 rounded border border-gray-400 bg-white px-2 py-2 pr-10",
-                    fileItemClassName
-                  )}
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gray-100">
-                    <FileIcon className="text-2xl text-gray-500" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <p
-                      className="truncate text-sm font-medium text-gray-700"
-                      title={file.name}
-                    >
-                      {file.name}
-                    </p>
-
-                    <p className="mt-0.5 text-xs text-gray-400">
-                      {formatFileSize(file.size)}
-                    </p>
-                  </div>
-
-                  <RemoveButton
-                    index={index}
-                  />
-                </div>
-              );
-            })}
+            {files.length > 0 && !loading && renderRemoveButton(0, "absolute  -right-1 -top-1 h-5 w-5 bg-red-600 text-white hover:bg-red-700 hover:text-white cursor-pointer")}
           </div>
-        )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 p-3">
+            <p className={twMerge("text-xs text-gray-500", helperClassName)}>
+              {helperText || `Maximum size: ${sizeLimit}MB`}
+            </p>
+            {renderButton(files.length ? "Change Banner" : "Upload Banner")}
+          </div>
+        </div>
+      )}
+
+      {/* IMAGES VARIANT */}
+      {variant === "images" && (
+        <div className={twMerge("space-y-3", containerClassName)}>
+          <button
+            type="button"
+            onClick={openFilePicker}
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (!disabled && !loading) setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            disabled={disabled || loading}
+            className={twMerge(
+              "flex min-h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 text-center transition",
+              isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50/50",
+              uploadClassName
+            )}
+          >
+            <MdCloudUpload size={30} className={twMerge("mb-2 text-gray-400", iconClassName)} />
+            <span className="text-sm font-medium text-gray-700">
+              {placeholder || "Click or drag images here"}
+            </span>
+            <span className="mt-1 text-xs text-gray-500">
+              {helperText || `Maximum ${maxFiles} images • ${sizeLimit}MB each`}
+            </span>
+          </button>
+
+          {preview && files.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {files.map((file, index) => (
+                <div key={`${file.name}-${file.lastModified}-${index}`} className="min-w-0">
+                  <div className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                    {renderMediaPreview(file, index)}
+                    {renderRemoveButton(index, "absolute right-2 top-2 h-7 w-7 bg-black/60 text-white hover:bg-red-600 hover:text-white")}
+                  </div>
+                  <p className="mt-1 truncate text-xs text-gray-600">{file.name}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* MEDIA VARIANT */}
+      {variant === "media" && (
+        <div className={twMerge("space-y-3", containerClassName)}>
+          <button
+            type="button"
+            onClick={openFilePicker}
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (!disabled && !loading) setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            disabled={disabled || loading}
+            className={twMerge(
+              "flex min-h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center transition hover:border-blue-400 hover:bg-blue-50/50",
+              isDragging && "border-blue-500 bg-blue-50",
+              uploadClassName
+            )}
+          >
+            <MdCloudUpload size={30} className={twMerge("mb-2 text-gray-400", iconClassName)} />
+            <span className="text-sm font-medium text-gray-700">
+              {placeholder || "Click or drag video/audio files here"}
+            </span>
+            <span className="mt-1 text-xs text-gray-500">
+              {helperText || `Maximum ${maxFiles} files • ${sizeLimit}MB each`}
+            </span>
+          </button>
+
+          {files.length > 0 && (
+            <div className="space-y-3">
+              {files.map((file, index) => (
+                <div key={`${file.name}-${file.lastModified}-${index}`} className="overflow-hidden rounded-lg border border-gray-200">
+                  {preview && file.type.startsWith("video/") && getPreviewUrl(file, index) && (
+                    <video src={getPreviewUrl(file, index)} controls className="max-h-48 w-full bg-black" />
+                  )}
+
+                  <div className="flex min-w-0 items-center gap-3 p-3">
+                    <span className="shrink-0 text-gray-500">{getFileIcon(file)}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-gray-700">{file.name}</p>
+                      <p className="text-xs text-gray-500">{formatSize(file.size)}</p>
+                      {preview && file.type.startsWith("audio/") && getPreviewUrl(file, index) && (
+                        <audio src={getPreviewUrl(file, index)} controls className="mt-2 w-full" />
+                      )}
+                    </div>
+                    {renderRemoveButton(index)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* DOCUMENTS VARIANT */}
+      {variant === "documents" && (
+        <div className={twMerge("space-y-3", containerClassName)}>
+          <button
+            type="button"
+            onClick={openFilePicker}
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (!disabled && !loading) setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            disabled={disabled || loading}
+            className={twMerge(
+              "flex min-h-28 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center transition hover:border-blue-400 hover:bg-blue-50/50",
+              isDragging && "border-blue-500 bg-blue-50",
+              uploadClassName
+            )}
+          >
+            <MdCloudUpload size={30} className={twMerge("mb-2 text-gray-400", iconClassName)} />
+            <span className="text-sm font-medium text-gray-700">
+              {placeholder || "Click or drag documents here"}
+            </span>
+            <span className="mt-1 text-xs text-gray-500">
+              {helperText || `Maximum ${maxFiles} files • ${sizeLimit}MB each`}
+            </span>
+          </button>
+
+          {showFileList && files.length > 0 && renderFileList()}
+        </div>
+      )}
+
+      {/* DEFAULT VARIANT */}
+      {variant === "default" && (
+        <div className={twMerge("space-y-3", containerClassName)}>
+          <button
+            type="button"
+            onClick={openFilePicker}
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (!disabled && !loading) setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            disabled={disabled || loading}
+            className={twMerge(
+              "flex min-h-32 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center transition hover:border-blue-400 hover:bg-blue-50/50",
+              isDragging && "border-blue-500 bg-blue-50",
+              uploadClassName
+            )}
+          >
+            <MdCloudUpload size={30} className={twMerge("mb-2 text-gray-400", iconClassName)} />
+            <span className="text-sm font-medium text-gray-700">
+              {placeholder || "Click or drag files here"}
+            </span>
+            <span className="mt-1 text-xs text-gray-500">
+              {helperText || `Maximum ${sizeLimit}MB per file`}
+            </span>
+          </button>
+
+          {preview && files.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {files.map((file, index) => (
+                <div key={`${file.name}-${file.lastModified}-${index}`} className="min-w-0">
+                  <div className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                    {renderMediaPreview(file, index)}
+                    {renderRemoveButton(index, "absolute right-2 top-2 h-7 w-7 bg-black/60 text-white hover:bg-red-600 hover:text-white")}
+                  </div>
+                  <p className="mt-1 truncate text-xs text-gray-600">{file.name}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {showFileList && files.length > 0 && renderFileList()}
+        </div>
+      )}
+
+      {displayError && (
+        <p className={twMerge("mt-2 text-xs text-red-500", errorClassName)}>
+          {displayError}
+        </p>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import {
     MdVisibility,
     MdVisibilityOff,
+    MdSearch,
 } from "react-icons/md";
 import Button from "../buttons/Button";
 
@@ -26,10 +27,14 @@ const Input = ({
     const [showPassword, setShowPassword] = useState(false);
 
     const isPassword = type === "password";
+    const isSearch = type === "search";
     const inputType = isPassword && showPassword ? "text" : type;
 
-    const hasLeftIcon = Icon && iconPosition === "left";
-    const hasRightIcon = Icon && iconPosition === "right";
+    // Automatically use MdSearch for search inputs.
+    const InputIcon = isSearch ? MdSearch : Icon;
+
+    const hasLeftIcon = InputIcon && iconPosition === "left";
+    const hasRightIcon = InputIcon && iconPosition === "right";
 
     return (
         <div className={twMerge("w-full", containerClassName)}>
@@ -46,7 +51,7 @@ const Input = ({
 
             <div className="relative">
                 {hasLeftIcon && (
-                    <Icon
+                    <InputIcon
                         size={iconSize}
                         className={twMerge(
                             "absolute left-3 top-1/2 -translate-y-1/2",
@@ -74,7 +79,7 @@ const Input = ({
                 />
 
                 {hasRightIcon && !isPassword && (
-                    <Icon
+                    <InputIcon
                         size={iconSize}
                         className={twMerge(
                             "absolute right-3 top-1/2 -translate-y-1/2",
@@ -87,40 +92,24 @@ const Input = ({
                     <Button
                         type="button"
                         variant="ghost"
-                        icon={showPassword ? MdVisibilityOff : MdVisibility}
-                        iconSize={20}
-                        aria-label={
-                            showPassword
-                                ? "Hide password"
-                                : "Show password"
-                        }
+                        aria-label={showPassword ? "Hide password" : "Show password"}
                         disabled={disabled}
-                        onClick={() =>
-                            setShowPassword((prev) => !prev)
-                        }
+                        onClick={() => setShowPassword((prev) => !prev)}
                         className="absolute right-1 top-1/2 h-9! w-9! -translate-y-1/2 p-0!"
-                    />
+                    >
+                        {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                    </Button>
                 )}
             </div>
 
             {error && (
-                <p
-                    className={twMerge(
-                        "mt-1 text-xs text-red-500",
-                        errorClassName
-                    )}
-                >
+                <p className={twMerge("mt-1 text-xs text-red-500", errorClassName)}>
                     {error}
                 </p>
             )}
 
             {!error && helperText && (
-                <p
-                    className={twMerge(
-                        "mt-1 text-xs text-gray-500",
-                        helperTextClassName
-                    )}
-                >
+                <p className={twMerge("mt-1 text-xs text-gray-500", helperTextClassName)}>
                     {helperText}
                 </p>
             )}
