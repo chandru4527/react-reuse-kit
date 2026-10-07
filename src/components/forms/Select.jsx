@@ -20,25 +20,62 @@ const Select = ({
   dropdownClassName = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
+
   const selectRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const selectedOption = options.find(
     (option) => String(option.value) === String(value)
   );
 
+  const updateDropdownPosition = () => {
+    if (!selectRef.current) return;
+
+    const rect = selectRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    const dropdownHeight = Math.min(
+      dropdownRef.current?.scrollHeight || 240,
+      240
+    );
+
+    const requiredSpace = dropdownHeight + 12;
+
+    setOpenUpward(
+      spaceBelow < requiredSpace && spaceAbove > spaceBelow
+    );
+  };
+
   useEffect(() => {
+    if (!isOpen) return;
+
+    updateDropdownPosition();
+
     const handleClickOutside = (event) => {
-      if (selectRef.current && !selectRef.current.contains(event.target)) {
+      if (
+        selectRef.current &&
+        !selectRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
 
+    const handlePositionChange = () => {
+      updateDropdownPosition();
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("resize", handlePositionChange);
+    window.addEventListener("scroll", handlePositionChange, true);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", handlePositionChange);
+      window.removeEventListener("scroll", handlePositionChange, true);
     };
-  }, []);
+  }, [isOpen, options.length]);
 
   const handleSelect = (option) => {
     if (option.disabled) return;
@@ -64,7 +101,6 @@ const Select = ({
           )}
         >
           {label}
-
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>
       )}
@@ -74,6 +110,8 @@ const Select = ({
           id={name}
           type="button"
           disabled={disabled}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
           onClick={() => setIsOpen((prev) => !prev)}
           className={twMerge(
             "flex w-full items-center gap-3 rounded-lg border bg-white px-4 py-2.5 text-left outline-none transition",
@@ -88,10 +126,7 @@ const Select = ({
         >
           {Icon && (
             <Icon
-              className={twMerge(
-                "shrink-0 text-xl",
-                iconClassName
-              )}
+              className={twMerge("shrink-0 text-xl", iconClassName)}
             />
           )}
 
@@ -114,8 +149,11 @@ const Select = ({
 
         {isOpen && !disabled && (
           <div
+            ref={dropdownRef}
+            role="listbox"
             className={twMerge(
-              "absolute z-50 mt-2 max-h-60 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg",
+              "absolute z-50 max-h-60 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg",
+              openUpward ? "bottom-full mb-2" : "top-full mt-2",
               dropdownClassName
             )}
           >
@@ -128,6 +166,8 @@ const Select = ({
                   <button
                     key={option.value}
                     type="button"
+                    role="option"
+                    aria-selected={isSelected}
                     disabled={option.disabled}
                     onClick={() => handleSelect(option)}
                     className={twMerge(
@@ -135,8 +175,7 @@ const Select = ({
                       isSelected
                         ? "bg-blue-100 text-blue-700"
                         : "text-gray-700 hover:bg-blue-50 hover:text-blue-700",
-                      option.disabled &&
-                      "cursor-not-allowed opacity-50"
+                      option.disabled && "cursor-not-allowed opacity-50"
                     )}
                   >
                     <span className="min-w-0 flex-1 truncate">
@@ -159,9 +198,7 @@ const Select = ({
       </div>
 
       {error && (
-        <p className="mt-1 text-sm text-red-500">
-          {error}
-        </p>
+        <p className="mt-1 text-sm text-red-500">{error}</p>
       )}
     </div>
   );
